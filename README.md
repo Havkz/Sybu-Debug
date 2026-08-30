@@ -1,154 +1,42 @@
 # Sybu Debug
 
-Meteor Client addon for Minecraft Java Edition 1.21.11.
+Meteor Client addon for Minecraft Java Edition **1.21.11**. It adds the exact Meteor category **Sybu Debug** containing the single module **SpectatorDetector**.
 
-This initial milestone provides the installable addon shell with the exact Meteor category `Sybu Debug` and the module `SpectatorDetector`. Detection behavior is added in subsequent versioned milestones.
+## Installation
 
-## Build
+1. Install Fabric Loader `0.18.2`, Meteor Client `1.21.11`, and Minecraft `1.21.11`.
+2. Download the JAR from the latest GitHub release.
+3. Put it beside Meteor Client in the Minecraft `mods` directory.
+4. Open Meteor's GUI, select `Sybu Debug`, and enable `SpectatorDetector`.
 
-Requires Java 21. Run `gradlew.bat clean build`; the remapped addon JAR is written to `build/libs`.
+Java 21 is required. To build locally, run `gradlew.bat clean build`; the remapped addon JAR is written to `build/libs`.
 
-## Limits
+## Detection
 
-A correctly implemented server-side vanish can withhold all player-specific information. This addon cannot reconstruct data the server never sends.
+The detector maintains one candidate per UUID and uses bounded packet evidence with time-based decay. Current direct signals include:
 
-<!-- Upstream template instructions retained below for attribution. -->
+- explicit `SPECTATOR` game mode in player-info updates;
+- UUID and player name from player info;
+- client-tracked player entity ID and exact position;
+- correlation between a known spectator and entity removal;
+- cleanup when player info is removed or game mode changes away from spectator.
 
-# Meteor Addon Template
+The system never invents coordinates. A live position becomes **Last Known** when the entity is removed and expires after 15 seconds.
 
-### How to use
+## Rendering and warnings
 
-#### Use GitHub Template (Recommended)
+Exact positions can show a 3D tracer, box, name, distance, confidence, and live/last-known state. Positionless detections produce a chat warning without a fake distance. Confidence thresholds, distance, tracer mode, and warning cooldown are configurable in `SpectatorDetector`.
 
-- Click the green `Use this template` button in the top right corner of this page.  
-  This will create a new repository with this template and a clean history.
+## Actions
 
-#### Clone Manually
+`Panic On Detect` can disable all active modules or only a selected list. The active module collection is copied before any module is disabled, preventing concurrent modification. `Keep Detector Active` defaults to true.
 
-- Alternatively, clone this repository using these commands for a clean history:
-  ```bash
-  git clone --depth 1 https://github.com/MeteorDevelopment/meteor-addon-template your-addon-name
-  cd your-addon-name
-  rm -rf .git
-  git init
-  git add .
-  git commit -m "Initial commit from template"
-  ```
+`Logoff On Detect` cleanly disconnects with `SpectatorDetector: spectator detected`; it never closes Minecraft. Warning, panic, and disconnect run in that order and panic/logoff trigger at most once per candidate.
 
-#### Development
+## Known limits
 
-- Use this template to add custom modules, commands, HUDs, and other features to Meteor Client.
-- To test, run the `Minecraft Client` configuration in your IDE.
-  This will start a Minecraft client with the Meteor Client mod and your addon loaded.
-- To build, run the gradle `build` task. This will create a JAR file in the `build/libs` folder.
-    - Move the JAR file to the `mods` folder of your Minecraft installation, alongside the Meteor Client mod and run the
-      game.
-
-### Updating to newer Minecraft versions
-
-To update this template to a newer Minecraft version, follow these steps:
-
-1. Ensure a Meteor Client snapshot is available for the new Minecraft version.
-2. Update `gradle/libs.versions.toml` (the versions catalog):
-    - Set the version entries to the new versions. Common keys to update are:
-        - `versions.minecraft` - Minecraft version
-        - `versions.yarn-mappings` - Yarn mappings
-        - `versions.fabric-loader` - Fabric loader version
-        - `versions.meteor` - Meteor Client snapshot version
-    - If your addon depends on other libraries listed under the `[libraries]` section, update their versions there as
-      needed.
-    - After editing, refresh Gradle dependencies and rebuild your project in the IDE.
-3. Update Loom:
-    - Change the `loom` version in `gradle/libs.versions.toml` (the `versions.loom` entry) to the latest version
-      compatible with the new Minecraft version.
-4. Update the Gradle wrapper:
-    - Run the wrapper update command for your platform. Examples:
-      - Unix / macOS / Windows (Powershell): `./gradlew wrapper --gradle-version <version> && ./gradlew wrapper`
-      - Windows (cmd.exe): `gradlew.bat wrapper --gradle-version <version> && gradlew.bat wrapper`
-    - This updates and regenerates the Gradle Wrapper scripts (`gradlew`, `gradlew.bat`, etc.) for the specified version.
-5. Update your source code:
-    - Adjust for Minecraft or Yarn mapping changes: method names, imports, mixins, etc.
-    - Check for Meteor Client API changes that may affect your addon by comparing against the
-      [master branch](https://github.com/MeteorDevelopment/meteor-client/tree/master).
-6. Build and test:
-    - Run the gradle `build` task.
-    - Confirm the build succeeds and your addon works with the new Minecraft version.
-
-### Project structure
-
-```text
-.
-│── .github
-│   ╰── workflows
-│       │── dev_build.yml
-│       ╰── pull_request.yml
-│── gradle
-│   │── libs.versions.toml
-│   ╰── wrapper
-│       │── gradle-wrapper.jar
-│       ╰── gradle-wrapper.properties
-│── src
-│   ╰── main
-│       │── java
-│       │   ╰── com
-│       │       ╰── example
-│       │           ╰── addon
-│       │               │── commands
-│       │               │   ╰── CommandExample
-│       │               │── hud
-│       │               │   ╰── HudExample
-│       │               │── modules
-│       │               │   ╰── ModuleExample
-│       │               ╰── AddonTemplate
-│       ╰── resources
-│           │── assets
-│           │   ╰── template
-│           │       ╰── icon.png
-│           │── addon-template.mixins.json
-│           ╰── fabric.mod.json
-│── .editorconfig
-│── .gitignore
-│── build.gradle.kts
-│── gradle.properties
-│── gradlew
-│── gradlew.bat
-│── LICENSE
-│── README.md
-╰── settings.gradle.kts
-```
-
-This is the default project structure. Each folder/file has a specific purpose.  
-Here is a brief explanation of the ones you might need to modify:
-
-- `.github/workflows`: Contains the GitHub Actions configuration files.
-- `gradle`: Contains the Gradle wrapper files and the versions catalog.  
-  - `libs.versions.toml`: Defines version numbers for Minecraft, Loom, Meteor, and other dependencies.
-  - `wrapper`: Contains the Gradle wrapper executable files.  
-    To update the Gradle wrapper executable itself, run the wrapper update command (examples are shown above).
-- `src/main/java/com/example/addon`: Contains the main class of the addon.  
-  Here you can register your custom commands, modules, and HUDs.  
-  Edit the `getPackage` method to reflect the package of your addon.
-- `src/main/resources`: Contains the resources of the addon.
-    - `assets`: Contains the assets of the addon.  
-      You can add your own assets here, separated in subfolders.
-        - `template`: Contains the assets of the template.  
-          You can replace the `icon.png` file with your own addon icon.  
-          Also, rename this folder to reflect the name of your addon.
-    - `addon-template.mixins.json`: Contains the Mixin configuration for the addon.  
-      You can add your own mixins in the `client` array.
-    - `fabric.mod.json`: Contains the metadata of the addon.  
-      Edit the various fields to reflect the metadata of your addon.
-- `build.gradle.kts`: Contains the Gradle build script.  
-  You can manage the dependencies of the addon here.  
-  Remember to keep the `fabric-loom` version up-to-date.
-- `gradle.properties`: Contains additional build properties used by the build script
-  (for example `maven_group` and `archives_base_name`).  
-  Dependency and platform version numbers are stored in `gradle/libs.versions.toml`.
-- `LICENSE`: Contains the license of the addon.  
-  You can edit this file to change the license of your addon.
-- `README.md`: Contains the documentation of the addon.  
-  You can edit this file to reflect the documentation of your addon, and showcase its features.
+A correctly implemented server-side vanish can withhold every player-specific signal. This addon cannot reconstruct information the server never sends. Direct packet leaks are reliable; locator, chunk, simulation, and activity correlations require additional caution and are not claimed as detections until implemented and verified. Network lag, respawns, dimension changes, server plugins, NPCs, and packet bursts can still create transient evidence; join/server-change state is cleared and guarded by a short grace period.
 
 ## License
 
-This template is available under the CC0 license. Feel free to use it for your own projects.
+CC0-1.0. The project began from the official Meteor addon template.

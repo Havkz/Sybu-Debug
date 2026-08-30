@@ -12,6 +12,7 @@ public final class DetectionCandidate {
     private long firstSeen;
     private long lastSeen;
     private long lastExactPosition;
+    private boolean livePosition;
     private double x, y, z;
     private final List<PacketEvidence> evidence = new ArrayList<>();
 
@@ -32,6 +33,8 @@ public final class DetectionCandidate {
     public long firstSeen() { return firstSeen; }
     public long lastSeen() { return lastSeen; }
     public long lastExactPosition() { return lastExactPosition; }
+    public boolean livePosition() { return livePosition; }
+    public void markPositionStale() { livePosition = false; }
     public double x() { return x; }
     public double y() { return y; }
     public double z() { return z; }
@@ -40,5 +43,6 @@ public final class DetectionCandidate {
         this.x = x; this.y = y; this.z = z;
         this.dimension = dimension;
         this.lastExactPosition = this.lastSeen = now;
+        this.livePosition = true;
     }
 }

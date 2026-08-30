@@ -8,5 +8,8 @@
   "6": ".getRepo",
   "7": "build.gradle.kts",
   "8": "settings.gradle.kts",
-  "9": "DetectionEngine"
+  "9": "DetectionEngine",
+  "10": ".handlePlayerSpawn",
+  "11": "PanicMode",
+  "12": "TracerMode"
 }
