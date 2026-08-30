@@ -132,7 +132,7 @@ public final class SpectatorDetector extends Module {
             if (entry.profileId().equals(mc.getSession().getUuidOrNull())) continue;
             playerInfoSeen.putIfAbsent(entry.profileId(), now);
             if (entry.gameMode() != GameMode.SPECTATOR) {
-                engine.remove(entry.profileId());
+                clearDetection(entry.profileId());
                 continue;
             }
 
@@ -162,9 +162,13 @@ public final class SpectatorDetector extends Module {
     }
 
     private void removePlayer(UUID uuid) {
-        engine.remove(uuid);
+        clearDetection(uuid);
         entityIds.values().removeIf(uuid::equals);
         playerInfoSeen.remove(uuid);
+    }
+
+    private void clearDetection(UUID uuid) {
+        engine.remove(uuid);
         lastWarnings.remove(uuid);
         actionState.remove(uuid);
     }
@@ -192,6 +196,7 @@ public final class SpectatorDetector extends Module {
         playerInfoSeen.clear();
         lastWarnings.clear();
         actionState.clear();
+        lastAnomalyScan = 0;
         graceUntil = System.currentTimeMillis() + JOIN_GRACE_MS;
     }
 

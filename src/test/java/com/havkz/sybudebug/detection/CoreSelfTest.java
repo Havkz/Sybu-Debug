@@ -53,10 +53,14 @@ public final class CoreSelfTest {
 
     private static void testE_NormalLeaveClearsCandidate() {
         DetectionEngine engine = new DetectionEngine();
+        DetectionActionState actions = new DetectionActionState();
         UUID uuid = UUID.randomUUID();
         engine.signal(uuid, DetectionSignal.PLAYER_INFO_WITHOUT_ENTITY, NOW, null, "joined");
+        check(actions.shouldPanic(uuid, 100, true, 85), "E: first detection may trigger panic");
         engine.remove(uuid);
+        actions.remove(uuid);
         check(engine.get(uuid) == null, "E: normal leave must remove candidate");
+        check(actions.shouldPanic(uuid, 100, true, 85), "E: a later detection of the same player must be a new event");
     }
 
     private static void testF_DimensionChangeClearsAllState() {

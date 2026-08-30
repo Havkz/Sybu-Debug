@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.11.0
+
+- Reset warning and one-shot action state when a spectator returns to a normal game mode.
+- Reset anomaly-scan timing on join, respawn, world change, and disconnect.
+
 ## 0.10.0
 
 - Added explicit automated scenarios A-I and one-shot action-state tests.
