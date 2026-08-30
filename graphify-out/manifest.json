@@ -1,0 +1,52 @@
+{
+  "build.gradle.kts": {
+    "mtime": 1788092341.5605094,
+    "ast_hash": "7daf7f9bb06aa4313e736caa5e642eec",
+    "semantic_hash": ""
+  },
+  "gradlew": {
+    "mtime": 1788092341.563059,
+    "ast_hash": "b60a94c7e112b22b5f03b88ba3566178",
+    "semantic_hash": ""
+  },
+  "settings.gradle.kts": {
+    "mtime": 1788092406.06068,
+    "ast_hash": "f1a5bcba9dbb4c176de41f1f0290aa69",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/havkz/sybudebug/SybuDebugAddon.java": {
+    "mtime": 1788092406.0621922,
+    "ast_hash": "60e31ed8076b49c17114eabfa82cdd9a",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/havkz/sybudebug/modules/SpectatorDetector.java": {
+    "mtime": 1788092406.0632026,
+    "ast_hash": "c4ce63e97dd743a5a7ce3f20ed5ccbea",
+    "semantic_hash": ""
+  },
+  "src/main/resources/fabric.mod.json": {
+    "mtime": 1788092406.06068,
+    "ast_hash": "4475f5daab7f1f6c8a882029d8da960a",
+    "semantic_hash": ""
+  },
+  ".github/workflows/dev_build.yml": {
+    "mtime": 1788092341.559005,
+    "ast_hash": "7d59304174787755669fe282dff8ca4b",
+    "semantic_hash": ""
+  },
+  ".github/workflows/pull_request.yml": {
+    "mtime": 1788092341.559005,
+    "ast_hash": "cccaaded3fd31f8db39db156bd8e0aee",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1788092406.064287,
+    "ast_hash": "0a8cc5edcd4129e449fc3fd055dbceaa",
+    "semantic_hash": ""
+  },
+  "src/main/resources/assets/template/icon.png": {
+    "mtime": 1788092245.9035504,
+    "ast_hash": "aebe82a3b64626b22d5a9d5edf2c8061",
+    "semantic_hash": ""
+  }
+}

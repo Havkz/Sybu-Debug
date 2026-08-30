@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "sybu-debug",
+  "version": "${version}",
+  "name": "Sybu Debug",
+  "description": "Client-side spectator detection for Meteor Client.",
+  "authors": [
+    "Havkz"
+  ],
+  "contact": {
+    "sources": "https://github.com/Havkz/Sybu-Debug"
+  },
+  "icon": "assets/template/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "meteor": [
+      "com.havkz.sybudebug.SybuDebugAddon"
+    ]
+  },
+  "custom": {
+    "meteor-client:color": "225,25,25",
+    "modmenu": {
+      "parent": {
+        "id": "meteor-client"
+      }
+    }
+  },
+  "depends": {
+    "java": ">=21",
+    "minecraft": ["${mc_version}"],
+    "meteor-client": "*"
+  }
+}
