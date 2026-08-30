@@ -1,16 +1,16 @@
 # Graph Report - Sybu-Debug  (2026-08-30)
 
 ## Corpus Check
-- 19 files · ~4,407 words
+- 19 files · ~4,566 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 160 nodes · 301 edges · 14 communities (11 shown, 3 thin omitted)
-- Extraction: 81% EXTRACTED · 19% INFERRED · 0% AMBIGUOUS · INFERRED: 56 edges (avg confidence: 0.8)
+- 163 nodes · 316 edges · 15 communities (14 shown, 1 thin omitted)
+- Extraction: 80% EXTRACTED · 20% INFERRED · 0% AMBIGUOUS · INFERRED: 63 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `bf3adb06`
+- Built from commit: `0b9f0df2`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -27,10 +27,11 @@
 - PanicMode
 - TracerMode
 - PositionalTrackedWaypointAccessor.java
+- TracerMode
 
 ## God Nodes (most connected - your core abstractions)
-1. `SpectatorDetector` - 36 edges
-2. `DetectionCandidate` - 34 edges
+1. `SpectatorDetector` - 38 edges
+2. `DetectionCandidate` - 36 edges
 3. `DetectionEngine` - 13 edges
 4. `DetectionSignal` - 12 edges
 5. `PacketEvidence` - 10 edges
@@ -55,7 +56,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (14 total, 3 thin omitted)
+## Communities (15 total, 1 thin omitted)
 
 ### Community 0 - "Meteor Addon Template"
 Cohesion: 0.25
@@ -70,19 +71,27 @@ Cohesion: 0.83
 Nodes (3): gradlew script, die(), warn()
 
 ### Community 3 - "SpectatorDetector.java"
-Cohesion: 0.09
-Nodes (20): EventHandler, GameJoinedEvent, GameLeftEvent, Module, Packet, PlayerListS2CPacket, Post, Receive (+12 more)
+Cohesion: 0.12
+Nodes (13): EventHandler, GameJoinedEvent, GameLeftEvent, Module, Packet, PlayerListS2CPacket, Post, Receive (+5 more)
+
+### Community 4 - "Override"
+Cohesion: 0.12
+Nodes (3): Render3DEvent, ConfidenceCalculator, DetectionCandidate
 
 ### Community 5 - "Sybu Debug"
 Cohesion: 0.15
 Nodes (10): DetectionSignal, CHUNK_ACTIVITY, ENTITY_ACTIVITY, EXPLICIT_SPECTATOR, LIVE_POSITION, PLAYER_INFO_WITHOUT_ENTITY, RECENT_ENTITY_REMOVAL, SPECTATOR_ENTITY_REMOVED (+2 more)
 
+### Community 6 - ".getRepo"
+Cohesion: 0.50
+Nodes (4): PanicMode, DISABLE_ALL_MODULES, DISABLE_SELECTED_MODULES, OFF
+
 ### Community 9 - "DetectionEngine"
-Cohesion: 0.16
+Cohesion: 0.15
 Nodes (4): DetectionEngine, DetectionHistory, PacketEvidence, CoreSelfTest
 
 ### Community 11 - "PanicMode"
-Cohesion: 0.26
+Cohesion: 0.23
 Nodes (8): AzimuthTrackedWaypointAccessor, Accessor, Mixin, Entry, ChunkPos, Vec3i, WaypointS2CPacket, WaypointTracker
 
 ### Community 12 - "TracerMode"
@@ -93,23 +102,27 @@ Nodes (4): ChunkTrackedWaypointAccessor, Accessor, ChunkPos, Mixin
 Cohesion: 0.53
 Nodes (4): Accessor, Mixin, Vec3i, PositionalTrackedWaypointAccessor
 
+### Community 14 - "TracerMode"
+Cohesion: 0.67
+Nodes (3): TracerMode, LIVE_AND_LAST_KNOWN, LIVE_ONLY
+
 ## Knowledge Gaps
 - **20 isolated node(s):** `EXPLICIT_SPECTATOR`, `SPECTATOR_WITH_UUID`, `LIVE_POSITION`, `SPECTATOR_ENTITY_REMOVED`, `WAYPOINT_CORRELATION` (+15 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **3 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **1 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `SpectatorDetector` connect `SpectatorDetector.java` to `DetectionEngine`, `.handlePlayerSpawn`, `PanicMode`, `Override`?**
-  _High betweenness centrality (0.310) - this node is a cross-community bridge._
+- **Why does `SpectatorDetector` connect `SpectatorDetector.java` to `Override`, `.getRepo`, `DetectionEngine`, `.handlePlayerSpawn`, `PanicMode`, `TracerMode`?**
+  _High betweenness centrality (0.313) - this node is a cross-community bridge._
 - **Why does `WaypointTracker` connect `PanicMode` to `SpectatorDetector.java`?**
-  _High betweenness centrality (0.216) - this node is a cross-community bridge._
+  _High betweenness centrality (0.212) - this node is a cross-community bridge._
 - **Why does `DetectionCandidate` connect `Override` to `DetectionEngine`, `.handlePlayerSpawn`, `SpectatorDetector.java`?**
-  _High betweenness centrality (0.199) - this node is a cross-community bridge._
+  _High betweenness centrality (0.203) - this node is a cross-community bridge._
 - **What connects `EXPLICIT_SPECTATOR`, `SPECTATOR_WITH_UUID`, `LIVE_POSITION` to the rest of the system?**
   _20 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `SpectatorDetector.java` be split into smaller, more focused modules?**
-  _Cohesion score 0.08907563025210084 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.11954022988505747 - nodes in this community are weakly interconnected._
 - **Should `Override` be split into smaller, more focused modules?**
-  _Cohesion score 0.14814814814814814 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.12310606060606061 - nodes in this community are weakly interconnected._

@@ -30,6 +30,7 @@ import net.minecraft.network.packet.s2c.play.EntitiesDestroyS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerRemoveS2CPacket;
+import net.minecraft.network.packet.s2c.play.PlayerRespawnS2CPacket;
 import net.minecraft.network.packet.s2c.play.WaypointS2CPacket;
 import net.minecraft.network.packet.s2c.common.DisconnectS2CPacket;
 import net.minecraft.text.Text;
@@ -57,10 +58,11 @@ public final class SpectatorDetector extends Module {
     private final Setting<Boolean> chatWarning = sgGeneral.add(new BoolSetting.Builder().name("chat-warning").description("Shows detection warnings in chat.").defaultValue(true).build());
     private final Setting<Integer> warningConfidence = sgGeneral.add(new IntSetting.Builder().name("warning-confidence").description("Minimum confidence for chat warnings.").defaultValue(60).range(0, 100).sliderRange(0, 100).build());
     private final Setting<Double> warningCooldown = sgGeneral.add(new DoubleSetting.Builder().name("warning-cooldown").description("Seconds between warnings for one candidate.").defaultValue(5).min(0).sliderMax(30).build());
+    private final Setting<Double> exactPositionRange = sgGeneral.add(new DoubleSetting.Builder().name("exact-position-range").description("Maximum range for detections with an exact position.").defaultValue(256).min(1).sliderMax(512).build());
 
     private final Setting<Boolean> renderTracer = sgRender.add(new BoolSetting.Builder().name("render-tracer").description("Draws a tracer to an exact client-known position.").defaultValue(true).build());
     private final Setting<Integer> minimumConfidence = sgRender.add(new IntSetting.Builder().name("minimum-confidence").description("Minimum confidence to render.").defaultValue(60).range(0, 100).sliderRange(0, 100).build());
-    private final Setting<TracerMode> tracerMode = sgRender.add(new EnumSetting.Builder<TracerMode>().name("tracer-mode").description("Whether last-known positions may be rendered.").defaultValue(TracerMode.LiveOnly).build());
+    private final Setting<TracerMode> tracerMode = sgRender.add(new EnumSetting.Builder<TracerMode>().name("tracer-mode").description("Whether last-known positions may be rendered.").defaultValue(TracerMode.LIVE_ONLY).build());
     private final Setting<Double> maximumDistance = sgRender.add(new DoubleSetting.Builder().name("maximum-distance").description("Maximum rendered distance.").defaultValue(256).min(1).sliderMax(512).build());
     private final Setting<Boolean> renderBox = sgRender.add(new BoolSetting.Builder().name("render-box").description("Draws a box at the exact position.").defaultValue(true).build());
     private final Setting<Boolean> renderName = sgRender.add(new BoolSetting.Builder().name("render-name").description("Shows the known player name.").defaultValue(true).build());
@@ -68,10 +70,10 @@ public final class SpectatorDetector extends Module {
     private final Setting<Boolean> renderConfidence = sgRender.add(new BoolSetting.Builder().name("render-confidence").description("Shows confidence in the position label.").defaultValue(true).build());
     private final Setting<SettingColor> renderColor = sgRender.add(new ColorSetting.Builder().name("color").description("Tracer and box color.").defaultValue(new SettingColor(255, 80, 80, 180)).build());
 
-    private final Setting<PanicMode> panicOnDetect = sgActions.add(new EnumSetting.Builder<PanicMode>().name("panic-on-detect").description("Disables modules when detection reaches the threshold.").defaultValue(PanicMode.Off).build());
-    private final Setting<Integer> panicConfidence = sgActions.add(new IntSetting.Builder().name("panic-confidence").description("Confidence required for panic.").defaultValue(85).range(0, 100).sliderRange(0, 100).visible(() -> panicOnDetect.get() != PanicMode.Off).build());
-    private final Setting<List<Module>> selectedModules = sgActions.add(new ModuleListSetting.Builder().name("selected-modules").description("Modules disabled by selected panic mode.").visible(() -> panicOnDetect.get() == PanicMode.DisableSelectedModules).build());
-    private final Setting<Boolean> keepDetectorActive = sgActions.add(new BoolSetting.Builder().name("keep-detector-active").description("Keeps SpectatorDetector active during panic.").defaultValue(true).visible(() -> panicOnDetect.get() != PanicMode.Off).build());
+    private final Setting<PanicMode> panicOnDetect = sgActions.add(new EnumSetting.Builder<PanicMode>().name("panic-on-detect").description("Disables modules when detection reaches the threshold.").defaultValue(PanicMode.OFF).build());
+    private final Setting<Integer> panicConfidence = sgActions.add(new IntSetting.Builder().name("panic-confidence").description("Confidence required for panic.").defaultValue(85).range(0, 100).sliderRange(0, 100).visible(() -> panicOnDetect.get() != PanicMode.OFF).build());
+    private final Setting<List<Module>> selectedModules = sgActions.add(new ModuleListSetting.Builder().name("selected-modules").description("Modules disabled by selected panic mode.").visible(() -> panicOnDetect.get() == PanicMode.DISABLE_SELECTED_MODULES).build());
+    private final Setting<Boolean> keepDetectorActive = sgActions.add(new BoolSetting.Builder().name("keep-detector-active").description("Keeps SpectatorDetector active during panic.").defaultValue(true).visible(() -> panicOnDetect.get() != PanicMode.OFF).build());
     private final Setting<Boolean> logoffOnDetect = sgActions.add(new BoolSetting.Builder().name("logoff-on-detect").description("Disconnects cleanly when detection reaches the threshold.").defaultValue(false).build());
     private final Setting<Integer> logoffConfidence = sgActions.add(new IntSetting.Builder().name("logoff-confidence").description("Confidence required to disconnect.").defaultValue(90).range(0, 100).sliderRange(0, 100).visible(logoffOnDetect::get).build());
     private final Setting<Boolean> debug = sgDebug.add(new BoolSetting.Builder().name("debug").description("Logs detector decisions without chat spam.").defaultValue(false).build());
@@ -79,10 +81,12 @@ public final class SpectatorDetector extends Module {
     private final DetectionEngine engine = new DetectionEngine();
     private final WaypointTracker waypointTracker = new WaypointTracker();
     private final Map<Integer, UUID> entityIds = new HashMap<>();
+    private final Map<UUID, Long> playerInfoSeen = new HashMap<>();
     private final Map<UUID, Long> lastWarnings = new HashMap<>();
     private final Set<UUID> triggeredPanic = new HashSet<>();
     private final Set<UUID> triggeredLogoff = new HashSet<>();
     private long graceUntil;
+    private long lastAnomalyScan;
 
     public SpectatorDetector() {
         super(SybuDebugAddon.CATEGORY, "spectator-detector", "Detects nearby spectator players from client-visible evidence.");
@@ -112,6 +116,7 @@ public final class SpectatorDetector extends Module {
         switch (packet) {
             case PlayerListS2CPacket update -> handlePlayerList(update, now);
             case PlayerRemoveS2CPacket remove -> remove.profileIds().forEach(this::removePlayer);
+            case PlayerRespawnS2CPacket ignored -> reset();
             case EntitySpawnS2CPacket spawn when spawn.getEntityType() == EntityType.PLAYER -> handlePlayerSpawn(spawn, now);
             case EntitiesDestroyS2CPacket destroy -> destroy.getEntityIds().forEach(id -> handleEntityRemove(id, now));
             case WaypointS2CPacket waypoint -> handleWaypoint(waypoint, now);
@@ -127,6 +132,7 @@ public final class SpectatorDetector extends Module {
 
         for (PlayerListS2CPacket.Entry entry : packet.getEntries()) {
             if (entry.profileId().equals(mc.getSession().getUuidOrNull())) continue;
+            playerInfoSeen.putIfAbsent(entry.profileId(), now);
             if (entry.gameMode() != GameMode.SPECTATOR) {
                 engine.remove(entry.profileId());
                 continue;
@@ -134,6 +140,7 @@ public final class SpectatorDetector extends Module {
 
             DetectionCandidate candidate = engine.signal(entry.profileId(), DetectionSignal.EXPLICIT_SPECTATOR, now, null, "player-info gamemode spectator");
             engine.signal(entry.profileId(), DetectionSignal.SPECTATOR_WITH_UUID, now, null, "player-info uuid");
+            candidate.gameMode(entry.gameMode().name());
             if (entry.profile() != null) candidate.username(entry.profile().name());
             if (debug.get()) SybuDebugAddon.LOG.info("Spectator player-info: {} ({})", candidate.username(), candidate.uuid());
         }
@@ -159,6 +166,7 @@ public final class SpectatorDetector extends Module {
     private void removePlayer(UUID uuid) {
         engine.remove(uuid);
         entityIds.values().removeIf(uuid::equals);
+        playerInfoSeen.remove(uuid);
         lastWarnings.remove(uuid);
         triggeredPanic.remove(uuid);
         triggeredLogoff.remove(uuid);
@@ -184,6 +192,7 @@ public final class SpectatorDetector extends Module {
         engine.clear();
         waypointTracker.clear();
         entityIds.clear();
+        playerInfoSeen.clear();
         lastWarnings.clear();
         triggeredPanic.clear();
         triggeredLogoff.clear();
@@ -194,6 +203,7 @@ public final class SpectatorDetector extends Module {
     private void onTick(TickEvent.Post event) {
         long now = System.currentTimeMillis();
         refreshLivePositions(now);
+        scanPlayerInfoAnomalies(now);
         engine.tick(now);
         evaluate(now);
     }
@@ -203,11 +213,12 @@ public final class SpectatorDetector extends Module {
         for (DetectionCandidate candidate : List.copyOf(engine.candidates())) {
             if (ignored(candidate)) continue;
             int confidence = ConfidenceCalculator.calculate(candidate, now);
+            if (!withinDetectionRange(candidate, now)) continue;
             if (confidence >= warningConfidence.get() && chatWarning.get() && now - lastWarnings.getOrDefault(candidate.uuid(), 0L) >= warningCooldown.get() * 1000) {
                 lastWarnings.put(candidate.uuid(), now);
                 warn(candidate, confidence, now);
             }
-            if (panicOnDetect.get() != PanicMode.Off && confidence >= panicConfidence.get() && triggeredPanic.add(candidate.uuid())) panic(candidate, confidence);
+            if (panicOnDetect.get() != PanicMode.OFF && confidence >= panicConfidence.get() && triggeredPanic.add(candidate.uuid())) panic(candidate, confidence);
             if (logoffOnDetect.get() && confidence >= logoffConfidence.get() && triggeredLogoff.add(candidate.uuid())) logoff(candidate, confidence);
         }
     }
@@ -228,7 +239,7 @@ public final class SpectatorDetector extends Module {
 
     private void panic(DetectionCandidate candidate, int confidence) {
         if (debug.get()) SybuDebugAddon.LOG.info("Panic action: {} confidence {}", candidate.uuid(), confidence);
-        List<Module> targets = panicOnDetect.get() == PanicMode.DisableAllModules
+        List<Module> targets = panicOnDetect.get() == PanicMode.DISABLE_ALL_MODULES
             ? new ArrayList<>(Modules.get().getActive()) : new ArrayList<>(selectedModules.get());
         for (Module module : targets) if (module.isActive() && (!keepDetectorActive.get() || module != this)) module.disable();
     }
@@ -257,7 +268,7 @@ public final class SpectatorDetector extends Module {
 
     private boolean positionUsable(DetectionCandidate candidate, long now) {
         if (!positionKnown(candidate, now)) return false;
-        return candidate.livePosition() || tracerMode.get() == TracerMode.LiveAndLastKnown;
+        return candidate.livePosition() || tracerMode.get() == TracerMode.LIVE_AND_LAST_KNOWN;
     }
 
     private boolean positionKnown(DetectionCandidate candidate, long now) {
@@ -275,6 +286,23 @@ public final class SpectatorDetector extends Module {
             candidate.position(pos.x, pos.y, pos.z, dimension(), now);
             engine.signal(candidate.uuid(), DetectionSignal.LIVE_POSITION, now, mapping.getKey(), "tracked player entity position");
         }
+    }
+
+    private void scanPlayerInfoAnomalies(long now) {
+        if (mc.world == null || mc.getNetworkHandler() == null || now - lastAnomalyScan < 1_000) return;
+        lastAnomalyScan = now;
+        for (Map.Entry<UUID, Long> entry : playerInfoSeen.entrySet()) {
+            if (now - entry.getValue() < JOIN_GRACE_MS || mc.world.getPlayerByUuid(entry.getKey()) != null) continue;
+            var playerInfo = mc.getNetworkHandler().getPlayerListEntry(entry.getKey());
+            if (playerInfo == null) continue;
+            DetectionCandidate candidate = engine.signal(entry.getKey(), DetectionSignal.PLAYER_INFO_WITHOUT_ENTITY, now, null, "player-info exists without entity");
+            candidate.username(playerInfo.getProfile().name());
+            candidate.gameMode(playerInfo.getGameMode().name());
+        }
+    }
+
+    private boolean withinDetectionRange(DetectionCandidate candidate, long now) {
+        return !positionKnown(candidate, now) || mc.player.getEntityPos().squaredDistanceTo(new Vec3d(candidate.x(), candidate.y(), candidate.z())) <= exactPositionRange.get() * exactPositionRange.get();
     }
 
     private void renderLabel(DetectionCandidate candidate, int confidence, double distance) {
@@ -306,6 +334,6 @@ public final class SpectatorDetector extends Module {
         return candidate.username() == null ? candidate.uuid().toString() : candidate.username();
     }
 
-    public enum TracerMode { LiveOnly, LiveAndLastKnown }
-    public enum PanicMode { Off, DisableAllModules, DisableSelectedModules }
+    public enum TracerMode { LIVE_ONLY, LIVE_AND_LAST_KNOWN }
+    public enum PanicMode { OFF, DISABLE_ALL_MODULES, DISABLE_SELECTED_MODULES }
 }

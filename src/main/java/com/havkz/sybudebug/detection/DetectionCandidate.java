@@ -9,6 +9,7 @@ public final class DetectionCandidate {
     private String username;
     private Integer entityId;
     private String dimension;
+    private String gameMode;
     private long firstSeen;
     private long lastSeen;
     private long lastExactPosition;
@@ -30,6 +31,8 @@ public final class DetectionCandidate {
     public Integer entityId() { return entityId; }
     public void entityId(Integer value) { entityId = value; }
     public String dimension() { return dimension; }
+    public String gameMode() { return gameMode; }
+    public void gameMode(String value) { gameMode = value; }
     public long firstSeen() { return firstSeen; }
     public long lastSeen() { return lastSeen; }
     public long lastExactPosition() { return lastExactPosition; }

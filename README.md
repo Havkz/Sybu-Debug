@@ -20,6 +20,7 @@ The detector maintains one candidate per UUID and uses bounded packet evidence w
 - client-tracked player entity ID and exact position;
 - correlation between a known spectator and entity removal;
 - Minecraft 1.21.11 locator/waypoint track, update, and untrack correlation by UUID;
+- weak player-info-without-entity anomalies that remain far below warning thresholds on their own;
 - cleanup when player info is removed or game mode changes away from spectator.
 
 The system never invents coordinates. A live position becomes **Last Known** when the entity is removed and expires after 15 seconds.
