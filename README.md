@@ -5,7 +5,7 @@ Meteor Client addon by **V0trex** for Minecraft Java Edition **1.21.11**. It add
 ## Installation
 
 1. Install Fabric Loader `0.18.2`, Meteor Client `1.21.11` (verified build `86`), and Minecraft `1.21.11`.
-2. Download the JAR from the latest GitHub release.
+2. Download the JAR from the [latest GitHub release](https://github.com/Havkz/Sybu-Debug/releases/latest).
 3. Put it beside Meteor Client in the Minecraft `mods` directory.
 4. Open Meteor's GUI, select `Sybu Debug`, and enable `SpectatorDetector`.
 
@@ -20,7 +20,7 @@ The detector maintains one candidate per UUID and uses bounded packet evidence w
 - explicit `SPECTATOR` game mode in player-info updates;
 - UUID and player name from player info;
 - client-tracked player entity ID and exact position;
-- correlation between a known spectator and entity removal;
+- correlation between a spectator game-mode update and entity removal in either packet order within 500 ms;
 - Minecraft 1.21.11 locator/waypoint track, update, and untrack correlation by UUID;
 - weak player-info-without-entity anomalies that remain far below warning thresholds on their own;
 - cleanup when player info is removed or game mode changes away from spectator.

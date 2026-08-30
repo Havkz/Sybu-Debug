@@ -20,8 +20,8 @@
     "semantic_hash": ""
   },
   "src/main/java/com/havkz/sybudebug/modules/SpectatorDetector.java": {
-    "mtime": 1788095265.0530143,
-    "ast_hash": "a9fe9199df589b464e51a2797bc6b8c2",
+    "mtime": 1788095407.7928312,
+    "ast_hash": "30aa6419fd883b3358eadcdc4c8818ec",
     "semantic_hash": ""
   },
   "src/main/resources/fabric.mod.json": {
@@ -40,8 +40,8 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1788094760.566549,
-    "ast_hash": "062552fa98a34a5b81138ee7b998e31b",
+    "mtime": 1788095407.7949004,
+    "ast_hash": "8f1c77406e17a6b6e29642537f75ee0b",
     "semantic_hash": ""
   },
   "src/main/resources/assets/template/icon.png": {
@@ -115,13 +115,13 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1788095265.0551822,
-    "ast_hash": "630529bbf1e083ff27fa5ffa5081d213",
+    "mtime": 1788095407.7938383,
+    "ast_hash": "1f4a39f8ca9a6f0e627159f70aebb839",
     "semantic_hash": ""
   },
   "TESTING.md": {
-    "mtime": 1788094702.2653832,
-    "ast_hash": "a3555e8d0ff14f0c53ff4cc98d7d6165",
+    "mtime": 1788095407.7954898,
+    "ast_hash": "7db0eacf08d0ab56729fb346770e7ebc",
     "semantic_hash": ""
   },
   "src/main/java/com/havkz/sybudebug/tracking/PlayerTracker.java": {

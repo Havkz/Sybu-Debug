@@ -89,7 +89,7 @@ public final class SpectatorDetector extends Module {
     private long lastAnomalyScan;
 
     public SpectatorDetector() {
-        super(SybuDebugAddon.CATEGORY, "spectator-detector", "Detects nearby spectator players from client-visible evidence.");
+        super(SybuDebugAddon.CATEGORY, "SpectatorDetector", "Detects nearby spectator players from client-visible evidence.");
     }
 
     @Override
@@ -301,7 +301,7 @@ public final class SpectatorDetector extends Module {
         PlayerTracker.Entry tracked = playerTracker.get(candidate.uuid());
         if (tracked == null) return;
         candidate.entityId(tracked.entityId());
-        if (tracked.removedAt() == 0) {
+        if (tracked.removedAt() == 0 && now - tracked.updatedAt() <= 2_000) {
             candidate.position(tracked.x(), tracked.y(), tracked.z(), tracked.dimension(), tracked.updatedAt());
             engine.signal(candidate.uuid(), DetectionSignal.LIVE_POSITION, now, tracked.entityId(), "tracked player entity position");
         } else if (now - tracked.removedAt() <= CORRELATION_WINDOW_MS) {

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.0
+
+- Finalized the exact `SpectatorDetector` GUI name and `Sybu Debug by V0trex` branding.
+- Prevented stale tracked-player coordinates from becoming live positions again.
+- Completed the documented A-I checks, release workflow, and final Minecraft 1.21.11 build.
+
 ## 0.12.0
 
 - Track exact positions for all client-spawned players without scanning the world.
