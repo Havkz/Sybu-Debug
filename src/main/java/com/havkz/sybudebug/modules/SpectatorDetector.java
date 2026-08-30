@@ -5,6 +5,7 @@ import com.havkz.sybudebug.detection.DetectionCandidate;
 import com.havkz.sybudebug.detection.DetectionEngine;
 import com.havkz.sybudebug.detection.DetectionSignal;
 import com.havkz.sybudebug.detection.ConfidenceCalculator;
+import com.havkz.sybudebug.detection.DetectionActionState;
 import com.havkz.sybudebug.tracking.WaypointTracker;
 import meteordevelopment.meteorclient.events.game.GameJoinedEvent;
 import meteordevelopment.meteorclient.events.game.GameLeftEvent;
@@ -39,11 +40,9 @@ import net.minecraft.world.GameMode;
 import org.joml.Vector3d;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 public final class SpectatorDetector extends Module {
@@ -79,12 +78,11 @@ public final class SpectatorDetector extends Module {
     private final Setting<Boolean> debug = sgDebug.add(new BoolSetting.Builder().name("debug").description("Logs detector decisions without chat spam.").defaultValue(false).build());
 
     private final DetectionEngine engine = new DetectionEngine();
+    private final DetectionActionState actionState = new DetectionActionState();
     private final WaypointTracker waypointTracker = new WaypointTracker();
     private final Map<Integer, UUID> entityIds = new HashMap<>();
     private final Map<UUID, Long> playerInfoSeen = new HashMap<>();
     private final Map<UUID, Long> lastWarnings = new HashMap<>();
-    private final Set<UUID> triggeredPanic = new HashSet<>();
-    private final Set<UUID> triggeredLogoff = new HashSet<>();
     private long graceUntil;
     private long lastAnomalyScan;
 
@@ -168,8 +166,7 @@ public final class SpectatorDetector extends Module {
         entityIds.values().removeIf(uuid::equals);
         playerInfoSeen.remove(uuid);
         lastWarnings.remove(uuid);
-        triggeredPanic.remove(uuid);
-        triggeredLogoff.remove(uuid);
+        actionState.remove(uuid);
     }
 
     private void handleWaypoint(WaypointS2CPacket packet, long now) {
@@ -194,8 +191,7 @@ public final class SpectatorDetector extends Module {
         entityIds.clear();
         playerInfoSeen.clear();
         lastWarnings.clear();
-        triggeredPanic.clear();
-        triggeredLogoff.clear();
+        actionState.clear();
         graceUntil = System.currentTimeMillis() + JOIN_GRACE_MS;
     }
 
@@ -218,8 +214,8 @@ public final class SpectatorDetector extends Module {
                 lastWarnings.put(candidate.uuid(), now);
                 warn(candidate, confidence, now);
             }
-            if (panicOnDetect.get() != PanicMode.OFF && confidence >= panicConfidence.get() && triggeredPanic.add(candidate.uuid())) panic(candidate, confidence);
-            if (logoffOnDetect.get() && confidence >= logoffConfidence.get() && triggeredLogoff.add(candidate.uuid())) logoff(candidate, confidence);
+            if (actionState.shouldPanic(candidate.uuid(), confidence, panicOnDetect.get() != PanicMode.OFF, panicConfidence.get())) panic(candidate, confidence);
+            if (actionState.shouldLogoff(candidate.uuid(), confidence, logoffOnDetect.get(), logoffConfidence.get())) logoff(candidate, confidence);
         }
     }
 

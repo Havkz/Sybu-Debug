@@ -20,8 +20,8 @@
     "semantic_hash": ""
   },
   "src/main/java/com/havkz/sybudebug/modules/SpectatorDetector.java": {
-    "mtime": 1788093860.4720106,
-    "ast_hash": "259f731b8b9987169c6566ea41ef5206",
+    "mtime": 1788094653.0481493,
+    "ast_hash": "7b63447dffd28c8e9f541579074df9d2",
     "semantic_hash": ""
   },
   "src/main/resources/fabric.mod.json": {
@@ -30,8 +30,8 @@
     "semantic_hash": ""
   },
   ".github/workflows/dev_build.yml": {
-    "mtime": 1788094122.190001,
-    "ast_hash": "ff252707276c6d5a86c18b2f88f23673",
+    "mtime": 1788094653.0451152,
+    "ast_hash": "1c5643d7604fe362c182fc5a48942ccb",
     "semantic_hash": ""
   },
   ".github/workflows/pull_request.yml": {
@@ -40,8 +40,8 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1788094487.410278,
-    "ast_hash": "9c7e06e8160496db76e7179237271d93",
+    "mtime": 1788094760.566549,
+    "ast_hash": "062552fa98a34a5b81138ee7b998e31b",
     "semantic_hash": ""
   },
   "src/main/resources/assets/template/icon.png": {
@@ -50,8 +50,8 @@
     "semantic_hash": ""
   },
   "src/main/java/com/havkz/sybudebug/detection/ConfidenceCalculator.java": {
-    "mtime": 1788092709.2104776,
-    "ast_hash": "55ce178e81b03e6e14998c221610dbb0",
+    "mtime": 1788094653.0471523,
+    "ast_hash": "29c0e9fc2920c667b5a73625c9387027",
     "semantic_hash": ""
   },
   "src/main/java/com/havkz/sybudebug/detection/DetectionCandidate.java": {
@@ -80,8 +80,8 @@
     "semantic_hash": ""
   },
   "src/test/java/com/havkz/sybudebug/detection/CoreSelfTest.java": {
-    "mtime": 1788093890.2332463,
-    "ast_hash": "fd45055118edcab41ec9d8cdce22dddf",
+    "mtime": 1788094702.2653832,
+    "ast_hash": "f33d5b39aabc67798e2d9dc94cc29ca5",
     "semantic_hash": ""
   },
   "src/main/java/com/havkz/sybudebug/mixin/AzimuthTrackedWaypointAccessor.java": {
@@ -107,6 +107,21 @@
   "src/main/resources/sybu-debug.mixins.json": {
     "mtime": 1788093506.6668115,
     "ast_hash": "b521916039ce4b7da014c0c4447d7dde",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/havkz/sybudebug/detection/DetectionActionState.java": {
+    "mtime": 1788094653.0461557,
+    "ast_hash": "08c36504628f30de31606bb84e9d7f5e",
+    "semantic_hash": ""
+  },
+  "CHANGELOG.md": {
+    "mtime": 1788094702.2662346,
+    "ast_hash": "56e3816e34c0812f5be317622b272f2b",
+    "semantic_hash": ""
+  },
+  "TESTING.md": {
+    "mtime": 1788094702.2653832,
+    "ast_hash": "a3555e8d0ff14f0c53ff4cc98d7d6165",
     "semantic_hash": ""
   }
 }

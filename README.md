@@ -4,12 +4,14 @@ Meteor Client addon by **V0trex** for Minecraft Java Edition **1.21.11**. It add
 
 ## Installation
 
-1. Install Fabric Loader `0.18.2`, Meteor Client `1.21.11`, and Minecraft `1.21.11`.
+1. Install Fabric Loader `0.18.2`, Meteor Client `1.21.11` (verified build `86`), and Minecraft `1.21.11`.
 2. Download the JAR from the latest GitHub release.
 3. Put it beside Meteor Client in the Minecraft `mods` directory.
 4. Open Meteor's GUI, select `Sybu Debug`, and enable `SpectatorDetector`.
 
 Java 21 is required. To build locally, run `gradlew.bat clean build`; the remapped addon JAR is written to `build/libs`.
+
+See [TESTING.md](TESTING.md) for the A-I verification matrix and [CHANGELOG.md](CHANGELOG.md) for the version history.
 
 ## Detection
 
