@@ -35,6 +35,9 @@ public final class DetectionCandidate {
     public long lastExactPosition() { return lastExactPosition; }
     public boolean livePosition() { return livePosition; }
     public void markPositionStale() { livePosition = false; }
+    public void expireLivePosition(long now, long timeoutMs) {
+        if (now - lastExactPosition > timeoutMs) livePosition = false;
+    }
     public double x() { return x; }
     public double y() { return y; }
     public double z() { return z; }

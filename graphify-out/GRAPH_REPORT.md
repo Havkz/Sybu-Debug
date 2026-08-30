@@ -1,16 +1,16 @@
 # Graph Report - Sybu-Debug  (2026-08-30)
 
 ## Corpus Check
-- 14 files · ~4,032 words
+- 19 files · ~4,407 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 132 nodes · 248 edges · 13 communities (10 shown, 3 thin omitted)
-- Extraction: 81% EXTRACTED · 19% INFERRED · 0% AMBIGUOUS · INFERRED: 47 edges (avg confidence: 0.8)
+- 160 nodes · 301 edges · 14 communities (11 shown, 3 thin omitted)
+- Extraction: 81% EXTRACTED · 19% INFERRED · 0% AMBIGUOUS · INFERRED: 56 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `e5c371fd`
+- Built from commit: `bf3adb06`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -26,18 +26,19 @@
 - .handlePlayerSpawn
 - PanicMode
 - TracerMode
+- PositionalTrackedWaypointAccessor.java
 
 ## God Nodes (most connected - your core abstractions)
-1. `SpectatorDetector` - 34 edges
-2. `DetectionCandidate` - 33 edges
+1. `SpectatorDetector` - 36 edges
+2. `DetectionCandidate` - 34 edges
 3. `DetectionEngine` - 13 edges
 4. `DetectionSignal` - 12 edges
 5. `PacketEvidence` - 10 edges
 6. `SybuDebugAddon` - 8 edges
 7. `DetectionHistory` - 8 edges
 8. `Sybu Debug` - 7 edges
-9. `PanicMode` - 4 edges
-10. `ConfidenceCalculator` - 3 edges
+9. `WaypointTracker` - 6 edges
+10. `PanicMode` - 4 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `DetectionCandidate` --references--> `PacketEvidence`  [EXTRACTED]
@@ -48,13 +49,13 @@
   src/main/java/com/havkz/sybudebug/modules/SpectatorDetector.java → src/main/java/com/havkz/sybudebug/detection/DetectionEngine.java
 - `PacketEvidence` --references--> `DetectionSignal`  [EXTRACTED]
   src/main/java/com/havkz/sybudebug/detection/PacketEvidence.java → src/main/java/com/havkz/sybudebug/detection/DetectionSignal.java
-- `DetectionEngine` --references--> `DetectionHistory`  [EXTRACTED]
-  src/main/java/com/havkz/sybudebug/detection/DetectionEngine.java → src/main/java/com/havkz/sybudebug/detection/DetectionHistory.java
+- `SpectatorDetector` --references--> `WaypointTracker`  [EXTRACTED]
+  src/main/java/com/havkz/sybudebug/modules/SpectatorDetector.java → src/main/java/com/havkz/sybudebug/tracking/WaypointTracker.java
 
 ## Import Cycles
 - None detected.
 
-## Communities (13 total, 3 thin omitted)
+## Communities (14 total, 3 thin omitted)
 
 ### Community 0 - "Meteor Addon Template"
 Cohesion: 0.25
@@ -69,8 +70,8 @@ Cohesion: 0.83
 Nodes (3): gradlew script, die(), warn()
 
 ### Community 3 - "SpectatorDetector.java"
-Cohesion: 0.13
-Nodes (13): EventHandler, GameJoinedEvent, GameLeftEvent, Module, Packet, PlayerListS2CPacket, Post, Receive (+5 more)
+Cohesion: 0.09
+Nodes (20): EventHandler, GameJoinedEvent, GameLeftEvent, Module, Packet, PlayerListS2CPacket, Post, Receive (+12 more)
 
 ### Community 5 - "Sybu Debug"
 Cohesion: 0.15
@@ -81,12 +82,16 @@ Cohesion: 0.16
 Nodes (4): DetectionEngine, DetectionHistory, PacketEvidence, CoreSelfTest
 
 ### Community 11 - "PanicMode"
-Cohesion: 0.50
-Nodes (4): PanicMode, DisableAllModules, DisableSelectedModules, Off
+Cohesion: 0.26
+Nodes (8): AzimuthTrackedWaypointAccessor, Accessor, Mixin, Entry, ChunkPos, Vec3i, WaypointS2CPacket, WaypointTracker
 
 ### Community 12 - "TracerMode"
-Cohesion: 0.67
-Nodes (3): TracerMode, LiveAndLastKnown, LiveOnly
+Cohesion: 0.53
+Nodes (4): ChunkTrackedWaypointAccessor, Accessor, ChunkPos, Mixin
+
+### Community 13 - "PositionalTrackedWaypointAccessor.java"
+Cohesion: 0.53
+Nodes (4): Accessor, Mixin, Vec3i, PositionalTrackedWaypointAccessor
 
 ## Knowledge Gaps
 - **20 isolated node(s):** `EXPLICIT_SPECTATOR`, `SPECTATOR_WITH_UUID`, `LIVE_POSITION`, `SPECTATOR_ENTITY_REMOVED`, `WAYPOINT_CORRELATION` (+15 more)
@@ -96,13 +101,15 @@ Nodes (3): TracerMode, LiveAndLastKnown, LiveOnly
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `SpectatorDetector` connect `SpectatorDetector.java` to `Override`, `.getRepo`, `DetectionEngine`, `.handlePlayerSpawn`, `PanicMode`, `TracerMode`?**
-  _High betweenness centrality (0.289) - this node is a cross-community bridge._
-- **Why does `DetectionCandidate` connect `Override` to `DetectionEngine`, `.handlePlayerSpawn`, `SpectatorDetector.java`, `.getRepo`?**
-  _High betweenness centrality (0.239) - this node is a cross-community bridge._
-- **Why does `DetectionSignal` connect `Sybu Debug` to `DetectionEngine`?**
-  _High betweenness centrality (0.123) - this node is a cross-community bridge._
+- **Why does `SpectatorDetector` connect `SpectatorDetector.java` to `DetectionEngine`, `.handlePlayerSpawn`, `PanicMode`, `Override`?**
+  _High betweenness centrality (0.310) - this node is a cross-community bridge._
+- **Why does `WaypointTracker` connect `PanicMode` to `SpectatorDetector.java`?**
+  _High betweenness centrality (0.216) - this node is a cross-community bridge._
+- **Why does `DetectionCandidate` connect `Override` to `DetectionEngine`, `.handlePlayerSpawn`, `SpectatorDetector.java`?**
+  _High betweenness centrality (0.199) - this node is a cross-community bridge._
 - **What connects `EXPLICIT_SPECTATOR`, `SPECTATOR_WITH_UUID`, `LIVE_POSITION` to the rest of the system?**
   _20 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `SpectatorDetector.java` be split into smaller, more focused modules?**
-  _Cohesion score 0.12535612535612536 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.08907563025210084 - nodes in this community are weakly interconnected._
+- **Should `Override` be split into smaller, more focused modules?**
+  _Cohesion score 0.14814814814814814 - nodes in this community are weakly interconnected._

@@ -5,6 +5,7 @@ import com.havkz.sybudebug.detection.DetectionCandidate;
 import com.havkz.sybudebug.detection.DetectionEngine;
 import com.havkz.sybudebug.detection.DetectionSignal;
 import com.havkz.sybudebug.detection.ConfidenceCalculator;
+import com.havkz.sybudebug.tracking.WaypointTracker;
 import meteordevelopment.meteorclient.events.game.GameJoinedEvent;
 import meteordevelopment.meteorclient.events.game.GameLeftEvent;
 import meteordevelopment.meteorclient.events.packets.PacketEvent;
@@ -29,6 +30,7 @@ import net.minecraft.network.packet.s2c.play.EntitiesDestroyS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerRemoveS2CPacket;
+import net.minecraft.network.packet.s2c.play.WaypointS2CPacket;
 import net.minecraft.network.packet.s2c.common.DisconnectS2CPacket;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
@@ -75,6 +77,7 @@ public final class SpectatorDetector extends Module {
     private final Setting<Boolean> debug = sgDebug.add(new BoolSetting.Builder().name("debug").description("Logs detector decisions without chat spam.").defaultValue(false).build());
 
     private final DetectionEngine engine = new DetectionEngine();
+    private final WaypointTracker waypointTracker = new WaypointTracker();
     private final Map<Integer, UUID> entityIds = new HashMap<>();
     private final Map<UUID, Long> lastWarnings = new HashMap<>();
     private final Set<UUID> triggeredPanic = new HashSet<>();
@@ -111,6 +114,7 @@ public final class SpectatorDetector extends Module {
             case PlayerRemoveS2CPacket remove -> remove.profileIds().forEach(this::removePlayer);
             case EntitySpawnS2CPacket spawn when spawn.getEntityType() == EntityType.PLAYER -> handlePlayerSpawn(spawn, now);
             case EntitiesDestroyS2CPacket destroy -> destroy.getEntityIds().forEach(id -> handleEntityRemove(id, now));
+            case WaypointS2CPacket waypoint -> handleWaypoint(waypoint, now);
             default -> { }
         }
         engine.tick(now);
@@ -160,12 +164,25 @@ public final class SpectatorDetector extends Module {
         triggeredLogoff.remove(uuid);
     }
 
+    private void handleWaypoint(WaypointS2CPacket packet, long now) {
+        WaypointTracker.Entry waypoint = waypointTracker.accept(packet, dimension(), now);
+        if (waypoint == null) return;
+        DetectionCandidate candidate = engine.get(waypoint.uuid());
+        if (candidate == null) return;
+        engine.signal(waypoint.uuid(), DetectionSignal.WAYPOINT_CORRELATION, now, candidate.entityId(), "locator " + waypoint.operation());
+        if (waypoint.position() != null) {
+            candidate.position(waypoint.position().getX(), waypoint.position().getY(), waypoint.position().getZ(), waypoint.dimension(), now);
+        }
+        if (debug.get()) SybuDebugAddon.LOG.info("Locator {} for {} type={} position={} chunk={} azimuth={}", waypoint.operation(), waypoint.uuid(), packet.waypoint().getClass().getSimpleName(), waypoint.position(), waypoint.chunk(), waypoint.azimuth());
+    }
+
     private String dimension() {
         return mc.world == null ? null : mc.world.getRegistryKey().getValue().toString();
     }
 
     private void reset() {
         engine.clear();
+        waypointTracker.clear();
         entityIds.clear();
         lastWarnings.clear();
         triggeredPanic.clear();

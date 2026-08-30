@@ -11,6 +11,9 @@ public final class CoreSelfTest {
         engine.signal(id, DetectionSignal.EXPLICIT_SPECTATOR, 1_001, 7, "spectator");
         engine.signal(id, DetectionSignal.SPECTATOR_WITH_UUID, 1_001, 7, "uuid");
         check(ConfidenceCalculator.calculate(candidate, 1_001) >= 90, "explicit spectator must be high confidence");
+        candidate.position(1, 2, 3, "minecraft:overworld", 1_001);
+        candidate.expireLivePosition(3_002, 2_000);
+        check(!candidate.livePosition(), "live position must become last known");
         engine.tick(70_000);
         check(ConfidenceCalculator.calculate(candidate, 70_000) == 0, "evidence must decay");
         engine.clear();

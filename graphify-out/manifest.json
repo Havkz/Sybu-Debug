@@ -20,13 +20,13 @@
     "semantic_hash": ""
   },
   "src/main/java/com/havkz/sybudebug/modules/SpectatorDetector.java": {
-    "mtime": 1788093284.6526988,
-    "ast_hash": "df43b5d5c8251a9f97ab534df09f5919",
+    "mtime": 1788093506.6765177,
+    "ast_hash": "e97f74fd5bddc223572802b823bc24fd",
     "semantic_hash": ""
   },
   "src/main/resources/fabric.mod.json": {
-    "mtime": 1788092406.06068,
-    "ast_hash": "4475f5daab7f1f6c8a882029d8da960a",
+    "mtime": 1788093506.6647816,
+    "ast_hash": "5385e41e142d2d4215893292457a777b",
     "semantic_hash": ""
   },
   ".github/workflows/dev_build.yml": {
@@ -40,8 +40,8 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1788093331.3746002,
-    "ast_hash": "48cfda9cc71a55cbda936594c526f7b6",
+    "mtime": 1788093574.1813023,
+    "ast_hash": "cd5d90f6c833725bab1718a79d2390d9",
     "semantic_hash": ""
   },
   "src/main/resources/assets/template/icon.png": {
@@ -55,13 +55,13 @@
     "semantic_hash": ""
   },
   "src/main/java/com/havkz/sybudebug/detection/DetectionCandidate.java": {
-    "mtime": 1788093184.2093656,
-    "ast_hash": "44e9cebb4dff8746ad15aa2149e101d1",
+    "mtime": 1788093506.6678154,
+    "ast_hash": "ef804ad702687e9bbbe17c77b30f8816",
     "semantic_hash": ""
   },
   "src/main/java/com/havkz/sybudebug/detection/DetectionEngine.java": {
-    "mtime": 1788092938.6382906,
-    "ast_hash": "0434b526d9b80eb7daf5518b05269b5a",
+    "mtime": 1788093506.669314,
+    "ast_hash": "804002e2109fbe9cbdeab9f99e600041",
     "semantic_hash": ""
   },
   "src/main/java/com/havkz/sybudebug/detection/DetectionHistory.java": {
@@ -80,8 +80,33 @@
     "semantic_hash": ""
   },
   "src/test/java/com/havkz/sybudebug/detection/CoreSelfTest.java": {
-    "mtime": 1788092709.2114847,
-    "ast_hash": "b9c980160d2a35cd5d6c1517d2775646",
+    "mtime": 1788093574.180798,
+    "ast_hash": "c0053f5e63c175af01ad575f0d6cc45d",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/havkz/sybudebug/mixin/AzimuthTrackedWaypointAccessor.java": {
+    "mtime": 1788093506.6745095,
+    "ast_hash": "9dd0213f1c32e72c6c994821ed10c85c",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/havkz/sybudebug/mixin/ChunkTrackedWaypointAccessor.java": {
+    "mtime": 1788093506.67333,
+    "ast_hash": "1ddb78e0c0b49880e804517a0dac9623",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/havkz/sybudebug/mixin/PositionalTrackedWaypointAccessor.java": {
+    "mtime": 1788093506.6723335,
+    "ast_hash": "069d2a85893a1c3d3c76d61903b545f0",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/havkz/sybudebug/tracking/WaypointTracker.java": {
+    "mtime": 1788093574.179796,
+    "ast_hash": "151293682743b547537dca9d9d7c60cc",
+    "semantic_hash": ""
+  },
+  "src/main/resources/sybu-debug.mixins.json": {
+    "mtime": 1788093506.6668115,
+    "ast_hash": "b521916039ce4b7da014c0c4447d7dde",
     "semantic_hash": ""
   }
 }

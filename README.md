@@ -19,6 +19,7 @@ The detector maintains one candidate per UUID and uses bounded packet evidence w
 - UUID and player name from player info;
 - client-tracked player entity ID and exact position;
 - correlation between a known spectator and entity removal;
+- Minecraft 1.21.11 locator/waypoint track, update, and untrack correlation by UUID;
 - cleanup when player info is removed or game mode changes away from spectator.
 
 The system never invents coordinates. A live position becomes **Last Known** when the entity is removed and expires after 15 seconds.
@@ -35,7 +36,7 @@ Exact positions can show a 3D tracer, box, name, distance, confidence, and live/
 
 ## Known limits
 
-A correctly implemented server-side vanish can withhold every player-specific signal. This addon cannot reconstruct information the server never sends. Direct packet leaks are reliable; locator, chunk, simulation, and activity correlations require additional caution and are not claimed as detections until implemented and verified. Network lag, respawns, dimension changes, server plugins, NPCs, and packet bursts can still create transient evidence; join/server-change state is cleared and guarded by a short grace period.
+A correctly implemented server-side vanish can withhold every player-specific signal. This addon cannot reconstruct information the server never sends. Direct packet leaks are reliable. Locator packets are correlated only when they expose the same UUID; exact positional waypoints are used directly, while chunk and azimuth waypoints are stored but never converted into fake coordinates. Chunk, simulation, and generic activity correlations are not claimed as detections. Network lag, respawns, dimension changes, server plugins, NPCs, and packet bursts can still create transient evidence; join/server-change state is cleared and guarded by a short grace period.
 
 ## License
 

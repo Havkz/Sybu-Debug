@@ -24,7 +24,10 @@ public final class DetectionEngine {
     public DetectionHistory history() { return history; }
 
     public void tick(long now) {
-        candidates.values().forEach(candidate -> candidate.prune(now));
+        candidates.values().forEach(candidate -> {
+            candidate.prune(now);
+            candidate.expireLivePosition(now, 2_000);
+        });
         candidates.values().removeIf(candidate -> candidate.evidence().isEmpty() && now - candidate.lastSeen() > CANDIDATE_TIMEOUT_MS);
     }
 

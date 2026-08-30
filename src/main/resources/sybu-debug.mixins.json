@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "com.havkz.sybudebug.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "AzimuthTrackedWaypointAccessor",
+    "ChunkTrackedWaypointAccessor",
+    "PositionalTrackedWaypointAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
