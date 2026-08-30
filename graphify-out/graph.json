@@ -1736,15 +1736,15 @@
       "norm_label": "readme.md"
     },
     {
-      "label": "Sybu Debug",
+      "label": "Sybu Debug by V0trex",
       "file_type": "document",
       "source_file": "README.md",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "readme_sybu_debug",
+      "id": "readme_sybu_debug_by_v0trex",
       "community": 0,
       "community_name": "Meteor Addon Template",
-      "norm_label": "sybu debug"
+      "norm_label": "sybu debug by v0trex"
     },
     {
       "label": "Installation",
@@ -5436,7 +5436,7 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "readme",
-      "target": "readme_sybu_debug",
+      "target": "readme_sybu_debug_by_v0trex",
       "confidence_score": 1.0
     },
     {
@@ -5446,7 +5446,7 @@
       "source_location": "L32",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "readme_sybu_debug",
+      "source": "readme_sybu_debug_by_v0trex",
       "target": "readme_actions",
       "confidence_score": 1.0
     },
@@ -5457,7 +5457,7 @@
       "source_location": "L14",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "readme_sybu_debug",
+      "source": "readme_sybu_debug_by_v0trex",
       "target": "readme_detection",
       "confidence_score": 1.0
     },
@@ -5468,7 +5468,7 @@
       "source_location": "L5",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "readme_sybu_debug",
+      "source": "readme_sybu_debug_by_v0trex",
       "target": "readme_installation",
       "confidence_score": 1.0
     },
@@ -5479,7 +5479,7 @@
       "source_location": "L38",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "readme_sybu_debug",
+      "source": "readme_sybu_debug_by_v0trex",
       "target": "readme_known_limits",
       "confidence_score": 1.0
     },
@@ -5490,7 +5490,7 @@
       "source_location": "L42",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "readme_sybu_debug",
+      "source": "readme_sybu_debug_by_v0trex",
       "target": "readme_license",
       "confidence_score": 1.0
     },
@@ -5501,11 +5501,11 @@
       "source_location": "L28",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "readme_sybu_debug",
+      "source": "readme_sybu_debug_by_v0trex",
       "target": "readme_rendering_and_warnings",
       "confidence_score": 1.0
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "5b12f7f04910f6eb6d3865522650dfc3c5645f7b"
+  "built_at_commit": "ad7ae041b299ad3ca53ddbffcc074e31a3d47684"
 }

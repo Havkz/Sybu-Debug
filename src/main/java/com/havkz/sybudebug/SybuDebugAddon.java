@@ -14,7 +14,7 @@ public final class SybuDebugAddon extends MeteorAddon {
 
     @Override
     public void onInitialize() {
-        LOG.info("Initializing Sybu Debug");
+        LOG.info("Initializing Sybu Debug by V0trex");
         Modules.get().add(new SpectatorDetector());
     }
 

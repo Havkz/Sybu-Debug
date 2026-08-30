@@ -1,6 +1,6 @@
-# Sybu Debug
+# Sybu Debug by V0trex
 
-Meteor Client addon for Minecraft Java Edition **1.21.11**. It adds the exact Meteor category **Sybu Debug** containing the single module **SpectatorDetector**.
+Meteor Client addon by **V0trex** for Minecraft Java Edition **1.21.11**. It adds the exact Meteor category **Sybu Debug** containing the single module **SpectatorDetector**.
 
 ## Installation
 

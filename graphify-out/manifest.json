@@ -15,8 +15,8 @@
     "semantic_hash": ""
   },
   "src/main/java/com/havkz/sybudebug/SybuDebugAddon.java": {
-    "mtime": 1788092406.0621922,
-    "ast_hash": "60e31ed8076b49c17114eabfa82cdd9a",
+    "mtime": 1788094487.4123082,
+    "ast_hash": "69b130533ee2248a0bebb365d5d3c21a",
     "semantic_hash": ""
   },
   "src/main/java/com/havkz/sybudebug/modules/SpectatorDetector.java": {
@@ -25,8 +25,8 @@
     "semantic_hash": ""
   },
   "src/main/resources/fabric.mod.json": {
-    "mtime": 1788093506.6647816,
-    "ast_hash": "5385e41e142d2d4215893292457a777b",
+    "mtime": 1788094487.4112937,
+    "ast_hash": "0d2173ea530250759e2d712590d1b8a6",
     "semantic_hash": ""
   },
   ".github/workflows/dev_build.yml": {
@@ -40,8 +40,8 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1788093722.652069,
-    "ast_hash": "5a78bf2bc75fe59a17e4b4b4f497a9d7",
+    "mtime": 1788094487.410278,
+    "ast_hash": "9c7e06e8160496db76e7179237271d93",
     "semantic_hash": ""
   },
   "src/main/resources/assets/template/icon.png": {

@@ -1,7 +1,7 @@
 # Graph Report - Sybu-Debug  (2026-08-30)
 
 ## Corpus Check
-- 19 files · ~4,628 words
+- 19 files · ~4,638 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `5b12f7f0`
+- Built from commit: `ad7ae041`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -37,7 +37,7 @@
 5. `PacketEvidence` - 10 edges
 6. `SybuDebugAddon` - 8 edges
 7. `DetectionHistory` - 8 edges
-8. `Sybu Debug` - 7 edges
+8. `Sybu Debug by V0trex` - 7 edges
 9. `WaypointTracker` - 6 edges
 10. `PanicMode` - 4 edges
 
@@ -60,7 +60,7 @@
 
 ### Community 0 - "Meteor Addon Template"
 Cohesion: 0.25
-Nodes (7): Actions, Detection, Installation, Known limits, License, Rendering and warnings, Sybu Debug
+Nodes (7): Actions, Detection, Installation, Known limits, License, Rendering and warnings, Sybu Debug by V0trex
 
 ### Community 1 - "SybuDebugAddon"
 Cohesion: 0.31
