@@ -19,6 +19,7 @@ public final class DetectionEngine {
     }
 
     public DetectionCandidate get(UUID uuid) { return candidates.get(uuid); }
+    public void remove(UUID uuid) { candidates.remove(uuid); }
     public Collection<DetectionCandidate> candidates() { return candidates.values(); }
     public DetectionHistory history() { return history; }
 

@@ -20,8 +20,8 @@
     "semantic_hash": ""
   },
   "src/main/java/com/havkz/sybudebug/modules/SpectatorDetector.java": {
-    "mtime": 1788092406.0632026,
-    "ast_hash": "c4ce63e97dd743a5a7ce3f20ed5ccbea",
+    "mtime": 1788092938.6382906,
+    "ast_hash": "b7981e5c0c26b739c613173da72a8ba4",
     "semantic_hash": ""
   },
   "src/main/resources/fabric.mod.json": {
@@ -60,8 +60,8 @@
     "semantic_hash": ""
   },
   "src/main/java/com/havkz/sybudebug/detection/DetectionEngine.java": {
-    "mtime": 1788092709.2104776,
-    "ast_hash": "4cfe99e3ea2b3815e8f582d59305ef79",
+    "mtime": 1788092938.6382906,
+    "ast_hash": "0434b526d9b80eb7daf5518b05269b5a",
     "semantic_hash": ""
   },
   "src/main/java/com/havkz/sybudebug/detection/DetectionHistory.java": {
