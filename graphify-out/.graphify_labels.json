@@ -12,5 +12,6 @@
   "10": ".handlePlayerSpawn",
   "11": "PanicMode",
   "12": "TracerMode",
-  "13": "PositionalTrackedWaypointAccessor.java"
+  "13": "PositionalTrackedWaypointAccessor.java",
+  "14": "TracerMode"
 }

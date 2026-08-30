@@ -6,6 +6,7 @@ import com.havkz.sybudebug.detection.DetectionEngine;
 import com.havkz.sybudebug.detection.DetectionSignal;
 import com.havkz.sybudebug.detection.ConfidenceCalculator;
 import com.havkz.sybudebug.detection.DetectionActionState;
+import com.havkz.sybudebug.tracking.PlayerTracker;
 import com.havkz.sybudebug.tracking.WaypointTracker;
 import meteordevelopment.meteorclient.events.game.GameJoinedEvent;
 import meteordevelopment.meteorclient.events.game.GameLeftEvent;
@@ -47,6 +48,7 @@ import java.util.UUID;
 
 public final class SpectatorDetector extends Module {
     private static final long LAST_KNOWN_TIMEOUT_MS = 15_000;
+    private static final long CORRELATION_WINDOW_MS = 500;
     private static final long JOIN_GRACE_MS = 3_000;
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
     private final SettingGroup sgRender = settings.createGroup("Render");
@@ -80,7 +82,7 @@ public final class SpectatorDetector extends Module {
     private final DetectionEngine engine = new DetectionEngine();
     private final DetectionActionState actionState = new DetectionActionState();
     private final WaypointTracker waypointTracker = new WaypointTracker();
-    private final Map<Integer, UUID> entityIds = new HashMap<>();
+    private final PlayerTracker playerTracker = new PlayerTracker();
     private final Map<UUID, Long> playerInfoSeen = new HashMap<>();
     private final Map<UUID, Long> lastWarnings = new HashMap<>();
     private long graceUntil;
@@ -140,12 +142,13 @@ public final class SpectatorDetector extends Module {
             engine.signal(entry.profileId(), DetectionSignal.SPECTATOR_WITH_UUID, now, null, "player-info uuid");
             candidate.gameMode(entry.gameMode().name());
             if (entry.profile() != null) candidate.username(entry.profile().name());
+            applyTrackedPlayer(candidate, now);
             if (debug.get()) SybuDebugAddon.LOG.info("Spectator player-info: {} ({})", candidate.username(), candidate.uuid());
         }
     }
 
     private void handlePlayerSpawn(EntitySpawnS2CPacket packet, long now) {
-        entityIds.put(packet.getEntityId(), packet.getUuid());
+        playerTracker.spawn(packet.getEntityId(), packet.getUuid(), packet.getX(), packet.getY(), packet.getZ(), dimension(), now);
         DetectionCandidate candidate = engine.get(packet.getUuid());
         if (candidate == null) return;
         candidate.entityId(packet.getEntityId());
@@ -154,16 +157,18 @@ public final class SpectatorDetector extends Module {
     }
 
     private void handleEntityRemove(int entityId, long now) {
-        UUID uuid = entityIds.remove(entityId);
-        if (uuid == null || engine.get(uuid) == null) return;
-        engine.get(uuid).markPositionStale();
-        engine.signal(uuid, DetectionSignal.SPECTATOR_ENTITY_REMOVED, now, entityId, "spectator entity removed");
-        engine.signal(uuid, DetectionSignal.RECENT_ENTITY_REMOVAL, now, entityId, "recent player entity removal");
+        PlayerTracker.Entry tracked = playerTracker.remove(entityId, now);
+        if (tracked == null || engine.get(tracked.uuid()) == null) return;
+        DetectionCandidate candidate = engine.get(tracked.uuid());
+        candidate.position(tracked.x(), tracked.y(), tracked.z(), tracked.dimension(), tracked.updatedAt());
+        candidate.markPositionStale();
+        engine.signal(tracked.uuid(), DetectionSignal.SPECTATOR_ENTITY_REMOVED, now, entityId, "spectator entity removed");
+        engine.signal(tracked.uuid(), DetectionSignal.RECENT_ENTITY_REMOVAL, now, entityId, "recent player entity removal");
     }
 
     private void removePlayer(UUID uuid) {
         clearDetection(uuid);
-        entityIds.values().removeIf(uuid::equals);
+        playerTracker.remove(uuid);
         playerInfoSeen.remove(uuid);
     }
 
@@ -192,7 +197,7 @@ public final class SpectatorDetector extends Module {
     private void reset() {
         engine.clear();
         waypointTracker.clear();
-        entityIds.clear();
+        playerTracker.clear();
         playerInfoSeen.clear();
         lastWarnings.clear();
         actionState.clear();
@@ -205,6 +210,7 @@ public final class SpectatorDetector extends Module {
         long now = System.currentTimeMillis();
         refreshLivePositions(now);
         scanPlayerInfoAnomalies(now);
+        playerTracker.prune(now, LAST_KNOWN_TIMEOUT_MS);
         engine.tick(now);
         evaluate(now);
     }
@@ -279,13 +285,30 @@ public final class SpectatorDetector extends Module {
 
     private void refreshLivePositions(long now) {
         if (mc.world == null) return;
-        for (Map.Entry<Integer, UUID> mapping : entityIds.entrySet()) {
-            DetectionCandidate candidate = engine.get(mapping.getValue());
-            Entity entity = mc.world.getEntityById(mapping.getKey());
-            if (candidate == null || entity == null) continue;
+        for (PlayerTracker.Entry tracked : playerTracker.liveEntries()) {
+            Entity entity = mc.world.getEntityById(tracked.entityId());
+            if (entity == null) continue;
             Vec3d pos = entity.getEntityPos();
+            tracked.update(pos.x, pos.y, pos.z, dimension(), now);
+            DetectionCandidate candidate = engine.get(tracked.uuid());
+            if (candidate == null) continue;
             candidate.position(pos.x, pos.y, pos.z, dimension(), now);
-            engine.signal(candidate.uuid(), DetectionSignal.LIVE_POSITION, now, mapping.getKey(), "tracked player entity position");
+            engine.signal(candidate.uuid(), DetectionSignal.LIVE_POSITION, now, tracked.entityId(), "tracked player entity position");
+        }
+    }
+
+    private void applyTrackedPlayer(DetectionCandidate candidate, long now) {
+        PlayerTracker.Entry tracked = playerTracker.get(candidate.uuid());
+        if (tracked == null) return;
+        candidate.entityId(tracked.entityId());
+        if (tracked.removedAt() == 0) {
+            candidate.position(tracked.x(), tracked.y(), tracked.z(), tracked.dimension(), tracked.updatedAt());
+            engine.signal(candidate.uuid(), DetectionSignal.LIVE_POSITION, now, tracked.entityId(), "tracked player entity position");
+        } else if (now - tracked.removedAt() <= CORRELATION_WINDOW_MS) {
+            candidate.position(tracked.x(), tracked.y(), tracked.z(), tracked.dimension(), tracked.updatedAt());
+            candidate.markPositionStale();
+            engine.signal(candidate.uuid(), DetectionSignal.SPECTATOR_ENTITY_REMOVED, now, tracked.entityId(), "spectator after recent entity removal");
+            engine.signal(candidate.uuid(), DetectionSignal.RECENT_ENTITY_REMOVAL, now, tracked.entityId(), "recent player entity removal");
         }
     }
 

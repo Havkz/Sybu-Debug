@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.12.0
+
+- Track exact positions for all client-spawned players without scanning the world.
+- Correlate entity removal up to 500 ms before a spectator game-mode update.
+
 ## 0.11.0
 
 - Reset warning and one-shot action state when a spectator returns to a normal game mode.

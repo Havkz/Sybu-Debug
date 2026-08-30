@@ -1,5 +1,7 @@
 package com.havkz.sybudebug.detection;
 
+import com.havkz.sybudebug.tracking.PlayerTracker;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -43,12 +45,17 @@ public final class CoreSelfTest {
 
     private static void testD_RemovedSpectatorKeepsLastKnownPosition() {
         DetectionEngine engine = new DetectionEngine();
-        DetectionCandidate candidate = explicitSpectator(engine, UUID.randomUUID());
-        candidate.position(4, 5, 6, "minecraft:overworld", NOW);
+        PlayerTracker tracker = new PlayerTracker();
+        UUID uuid = UUID.randomUUID();
+        tracker.spawn(7, uuid, 4, 5, 6, "minecraft:overworld", NOW);
+        PlayerTracker.Entry removed = tracker.remove(7, NOW + 10);
+        DetectionCandidate candidate = explicitSpectator(engine, uuid);
+        candidate.position(removed.x(), removed.y(), removed.z(), removed.dimension(), removed.updatedAt());
         candidate.markPositionStale();
         engine.signal(candidate.uuid(), DetectionSignal.SPECTATOR_ENTITY_REMOVED, NOW + 10, 7, "removed");
         check(!candidate.livePosition() && candidate.x() == 4 && candidate.y() == 5 && candidate.z() == 6, "D: removed entity must retain only last-known coordinates");
         check(ConfidenceCalculator.calculate(candidate, NOW + 10) >= 90, "D: removal correlated with spectator must remain high confidence");
+        check(tracker.get(uuid).removedAt() == NOW + 10, "D: remove-before-gamemode ordering must remain correlatable by UUID");
     }
 
     private static void testE_NormalLeaveClearsCandidate() {

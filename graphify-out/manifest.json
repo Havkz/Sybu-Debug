@@ -20,8 +20,8 @@
     "semantic_hash": ""
   },
   "src/main/java/com/havkz/sybudebug/modules/SpectatorDetector.java": {
-    "mtime": 1788095035.7513204,
-    "ast_hash": "6bc7f1b130368995127586374d4df8c7",
+    "mtime": 1788095265.0530143,
+    "ast_hash": "a9fe9199df589b464e51a2797bc6b8c2",
     "semantic_hash": ""
   },
   "src/main/resources/fabric.mod.json": {
@@ -80,8 +80,8 @@
     "semantic_hash": ""
   },
   "src/test/java/com/havkz/sybudebug/detection/CoreSelfTest.java": {
-    "mtime": 1788095035.7523158,
-    "ast_hash": "a3f074e3e2a09a736609a6a4746e39d4",
+    "mtime": 1788095265.0536208,
+    "ast_hash": "6f57e17d2b53e008b5578a078c53df1c",
     "semantic_hash": ""
   },
   "src/main/java/com/havkz/sybudebug/mixin/AzimuthTrackedWaypointAccessor.java": {
@@ -115,13 +115,18 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1788095035.7538147,
-    "ast_hash": "cb7606fc8b714159dbb98b82c2ad8273",
+    "mtime": 1788095265.0551822,
+    "ast_hash": "630529bbf1e083ff27fa5ffa5081d213",
     "semantic_hash": ""
   },
   "TESTING.md": {
     "mtime": 1788094702.2653832,
     "ast_hash": "a3555e8d0ff14f0c53ff4cc98d7d6165",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/havkz/sybudebug/tracking/PlayerTracker.java": {
+    "mtime": 1788095265.0520017,
+    "ast_hash": "16ff40acded9378d03809018919750c7",
     "semantic_hash": ""
   }
 }
