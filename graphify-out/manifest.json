@@ -20,8 +20,8 @@
     "semantic_hash": ""
   },
   "src/main/java/com/havkz/sybudebug/modules/SpectatorDetector.java": {
-    "mtime": 1788093722.6515677,
-    "ast_hash": "d22b72657966c23f0777a9e3ad138b90",
+    "mtime": 1788093860.4720106,
+    "ast_hash": "259f731b8b9987169c6566ea41ef5206",
     "semantic_hash": ""
   },
   "src/main/resources/fabric.mod.json": {
@@ -30,8 +30,8 @@
     "semantic_hash": ""
   },
   ".github/workflows/dev_build.yml": {
-    "mtime": 1788092341.559005,
-    "ast_hash": "7d59304174787755669fe282dff8ca4b",
+    "mtime": 1788093845.287534,
+    "ast_hash": "f9e5fd8e2612481641d7a21697ff5655",
     "semantic_hash": ""
   },
   ".github/workflows/pull_request.yml": {
@@ -55,8 +55,8 @@
     "semantic_hash": ""
   },
   "src/main/java/com/havkz/sybudebug/detection/DetectionCandidate.java": {
-    "mtime": 1788093722.6505697,
-    "ast_hash": "4cd1352e4f3ba3bcfc1a7da26e316f09",
+    "mtime": 1788093845.288042,
+    "ast_hash": "54794c2ca978b9b0f85a6551db5e6bfe",
     "semantic_hash": ""
   },
   "src/main/java/com/havkz/sybudebug/detection/DetectionEngine.java": {
@@ -80,8 +80,8 @@
     "semantic_hash": ""
   },
   "src/test/java/com/havkz/sybudebug/detection/CoreSelfTest.java": {
-    "mtime": 1788093574.180798,
-    "ast_hash": "c0053f5e63c175af01ad575f0d6cc45d",
+    "mtime": 1788093890.2332463,
+    "ast_hash": "fd45055118edcab41ec9d8cdce22dddf",
     "semantic_hash": ""
   },
   "src/main/java/com/havkz/sybudebug/mixin/AzimuthTrackedWaypointAccessor.java": {

@@ -1,16 +1,16 @@
 # Graph Report - Sybu-Debug  (2026-08-30)
 
 ## Corpus Check
-- 19 files · ~4,566 words
+- 19 files · ~4,628 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 163 nodes · 316 edges · 15 communities (14 shown, 1 thin omitted)
-- Extraction: 80% EXTRACTED · 20% INFERRED · 0% AMBIGUOUS · INFERRED: 63 edges (avg confidence: 0.8)
+- 163 nodes · 317 edges · 15 communities (14 shown, 1 thin omitted)
+- Extraction: 80% EXTRACTED · 20% INFERRED · 0% AMBIGUOUS · INFERRED: 64 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `0b9f0df2`
+- Built from commit: `5b12f7f0`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -119,7 +119,7 @@ _Questions this graph is uniquely positioned to answer:_
 - **Why does `WaypointTracker` connect `PanicMode` to `SpectatorDetector.java`?**
   _High betweenness centrality (0.212) - this node is a cross-community bridge._
 - **Why does `DetectionCandidate` connect `Override` to `DetectionEngine`, `.handlePlayerSpawn`, `SpectatorDetector.java`?**
-  _High betweenness centrality (0.203) - this node is a cross-community bridge._
+  _High betweenness centrality (0.202) - this node is a cross-community bridge._
 - **What connects `EXPLICIT_SPECTATOR`, `SPECTATOR_WITH_UUID`, `LIVE_POSITION` to the rest of the system?**
   _20 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `SpectatorDetector.java` be split into smaller, more focused modules?**

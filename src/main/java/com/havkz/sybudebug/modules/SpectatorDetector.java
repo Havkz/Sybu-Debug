@@ -292,9 +292,16 @@ public final class SpectatorDetector extends Module {
         if (mc.world == null || mc.getNetworkHandler() == null || now - lastAnomalyScan < 1_000) return;
         lastAnomalyScan = now;
         for (Map.Entry<UUID, Long> entry : playerInfoSeen.entrySet()) {
-            if (now - entry.getValue() < JOIN_GRACE_MS || mc.world.getPlayerByUuid(entry.getKey()) != null) continue;
+            if (now - entry.getValue() < JOIN_GRACE_MS) continue;
             var playerInfo = mc.getNetworkHandler().getPlayerListEntry(entry.getKey());
             if (playerInfo == null) continue;
+            if (playerInfo.getGameMode() == GameMode.SPECTATOR) {
+                DetectionCandidate spectator = engine.signal(entry.getKey(), DetectionSignal.EXPLICIT_SPECTATOR, now, null, "current player-info gamemode spectator");
+                engine.signal(entry.getKey(), DetectionSignal.SPECTATOR_WITH_UUID, now, null, "current player-info uuid");
+                spectator.username(playerInfo.getProfile().name());
+                spectator.gameMode(playerInfo.getGameMode().name());
+            }
+            if (mc.world.getPlayerByUuid(entry.getKey()) != null) continue;
             DetectionCandidate candidate = engine.signal(entry.getKey(), DetectionSignal.PLAYER_INFO_WITHOUT_ENTITY, now, null, "player-info exists without entity");
             candidate.username(playerInfo.getProfile().name());
             candidate.gameMode(playerInfo.getGameMode().name());

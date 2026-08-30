@@ -10,7 +10,9 @@ public final class CoreSelfTest {
         check(ConfidenceCalculator.calculate(candidate, 1_000) < 30, "weak signal must stay low");
         engine.signal(id, DetectionSignal.EXPLICIT_SPECTATOR, 1_001, 7, "spectator");
         engine.signal(id, DetectionSignal.SPECTATOR_WITH_UUID, 1_001, 7, "uuid");
-        check(ConfidenceCalculator.calculate(candidate, 1_001) >= 90, "explicit spectator must be high confidence");
+        engine.signal(id, DetectionSignal.SPECTATOR_WITH_UUID, 1_002, 7, "uuid refresh");
+        check(candidate.evidence().stream().filter(e -> e.signal() == DetectionSignal.SPECTATOR_WITH_UUID).count() == 1, "candidate keeps only latest evidence per signal");
+        check(ConfidenceCalculator.calculate(candidate, 1_002) >= 90, "explicit spectator must be high confidence");
         candidate.position(1, 2, 3, "minecraft:overworld", 1_001);
         candidate.expireLivePosition(3_002, 2_000);
         check(!candidate.livePosition(), "live position must become last known");

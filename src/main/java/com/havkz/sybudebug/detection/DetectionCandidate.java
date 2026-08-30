@@ -22,7 +22,11 @@ public final class DetectionCandidate {
         this.firstSeen = this.lastSeen = now;
     }
 
-    public void add(PacketEvidence item) { evidence.add(item); lastSeen = Math.max(lastSeen, item.timestamp()); }
+    public void add(PacketEvidence item) {
+        evidence.removeIf(existing -> existing.signal() == item.signal());
+        evidence.add(item);
+        lastSeen = Math.max(lastSeen, item.timestamp());
+    }
     public void prune(long now) { evidence.removeIf(item -> !item.activeAt(now)); }
     public List<PacketEvidence> evidence() { return List.copyOf(evidence); }
     public UUID uuid() { return uuid; }
