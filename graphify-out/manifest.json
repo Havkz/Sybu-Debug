@@ -1,7 +1,7 @@
 {
   "build.gradle.kts": {
-    "mtime": 1788092341.5605094,
-    "ast_hash": "7daf7f9bb06aa4313e736caa5e642eec",
+    "mtime": 1788092754.5491261,
+    "ast_hash": "87ea9440615ac3d6ddd51afc44b6339f",
     "semantic_hash": ""
   },
   "gradlew": {
@@ -47,6 +47,41 @@
   "src/main/resources/assets/template/icon.png": {
     "mtime": 1788092245.9035504,
     "ast_hash": "aebe82a3b64626b22d5a9d5edf2c8061",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/havkz/sybudebug/detection/ConfidenceCalculator.java": {
+    "mtime": 1788092709.2104776,
+    "ast_hash": "55ce178e81b03e6e14998c221610dbb0",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/havkz/sybudebug/detection/DetectionCandidate.java": {
+    "mtime": 1788092709.2089753,
+    "ast_hash": "c4676f177b762181b744de3335ae2424",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/havkz/sybudebug/detection/DetectionEngine.java": {
+    "mtime": 1788092709.2104776,
+    "ast_hash": "4cfe99e3ea2b3815e8f582d59305ef79",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/havkz/sybudebug/detection/DetectionHistory.java": {
+    "mtime": 1788092709.2089753,
+    "ast_hash": "0756aadb00bdb7d4679baa4e4e1eccb7",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/havkz/sybudebug/detection/DetectionSignal.java": {
+    "mtime": 1788092709.207719,
+    "ast_hash": "d3be2b3be9ab1e3050a9b543d353661e",
+    "semantic_hash": ""
+  },
+  "src/main/java/com/havkz/sybudebug/detection/PacketEvidence.java": {
+    "mtime": 1788092709.2089753,
+    "ast_hash": "aa05dd424ce57339690b79688c13c26b",
+    "semantic_hash": ""
+  },
+  "src/test/java/com/havkz/sybudebug/detection/CoreSelfTest.java": {
+    "mtime": 1788092709.2114847,
+    "ast_hash": "b9c980160d2a35cd5d6c1517d2775646",
     "semantic_hash": ""
   }
 }

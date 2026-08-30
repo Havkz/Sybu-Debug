@@ -2,6 +2,7 @@
 
 .gradle/
 build/
+graphify-out/20*/
 out/
 classes/
 

@@ -30,6 +30,20 @@ dependencies {
 }
 
 tasks {
+    withType<Test>().configureEach {
+        failOnNoDiscoveredTests = false
+    }
+
+    val coreSelfTest by registering(JavaExec::class) {
+        dependsOn(testClasses)
+        classpath = sourceSets.test.get().runtimeClasspath
+        mainClass = "com.havkz.sybudebug.detection.CoreSelfTest"
+    }
+
+    check {
+        dependsOn(coreSelfTest)
+    }
+
     processResources {
         val propertyMap = mapOf(
             "version" to project.version,
