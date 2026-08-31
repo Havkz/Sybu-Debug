@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.1
+
+- Renamed the visible activity module to `LümmelFinder`.
+
 ## 1.1.0
 
 - Added `BaseActivityDetector` with incremental hole and obsidian activity scanning.

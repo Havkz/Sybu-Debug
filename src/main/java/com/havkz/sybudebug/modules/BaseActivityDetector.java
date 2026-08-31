@@ -155,7 +155,7 @@ public final class BaseActivityDetector extends Module {
     private long lastNotification;
 
     public BaseActivityDetector() {
-        super(SybuDebugAddon.CATEGORY, "BaseActivityDetector", "Visualizes low visible player-activity areas from holes and obsidian.");
+        super(SybuDebugAddon.CATEGORY, "LümmelFinder", "Visualizes low visible player-activity areas from holes and obsidian.");
     }
 
     @Override

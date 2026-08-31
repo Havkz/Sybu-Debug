@@ -906,8 +906,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "src_main_java_com_havkz_sybudebug_detection_detectionactionstate_detectionactionstate_remove",
-      "community": 9,
-      "community_name": "DetectionEngine",
+      "community": 3,
+      "community_name": "SpectatorDetector.java",
       "norm_label": ".remove()"
     },
     {
@@ -994,8 +994,8 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "src_main_java_com_havkz_sybudebug_detection_detectioncandidate_detectioncandidate_uuid",
-      "community": 3,
-      "community_name": "SpectatorDetector.java",
+      "community": 9,
+      "community_name": "DetectionEngine",
       "norm_label": ".uuid()"
     },
     {
@@ -1016,8 +1016,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "src_main_java_com_havkz_sybudebug_detection_detectioncandidate_detectioncandidate_entityid",
-      "community": 3,
-      "community_name": "SpectatorDetector.java",
+      "community": 10,
+      "community_name": ".handlePlayerSpawn",
       "norm_label": ".entityid()"
     },
     {
@@ -1093,8 +1093,8 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "src_main_java_com_havkz_sybudebug_detection_detectioncandidate_detectioncandidate_markpositionstale",
-      "community": 3,
-      "community_name": "SpectatorDetector.java",
+      "community": 10,
+      "community_name": ".handlePlayerSpawn",
       "norm_label": ".markpositionstale()"
     },
     {
@@ -1148,8 +1148,8 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "src_main_java_com_havkz_sybudebug_detection_detectioncandidate_detectioncandidate_position",
-      "community": 3,
-      "community_name": "SpectatorDetector.java",
+      "community": 10,
+      "community_name": ".handlePlayerSpawn",
       "norm_label": ".position()"
     },
     {
@@ -1192,8 +1192,8 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "src_main_java_com_havkz_sybudebug_detection_detectionengine_detectionengine_get",
-      "community": 3,
-      "community_name": "SpectatorDetector.java",
+      "community": 10,
+      "community_name": ".handlePlayerSpawn",
       "norm_label": ".get()"
     },
     {
@@ -1214,8 +1214,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "src_main_java_com_havkz_sybudebug_detection_detectionengine_detectionengine_candidates",
-      "community": 3,
-      "community_name": "SpectatorDetector.java",
+      "community": 9,
+      "community_name": "DetectionEngine",
       "norm_label": ".candidates()"
     },
     {
@@ -1709,8 +1709,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "module",
-      "community": 4,
-      "community_name": "Override",
+      "community": 3,
+      "community_name": "SpectatorDetector.java",
       "norm_label": "module"
     },
     {
@@ -2380,8 +2380,8 @@
       "source_location": "L150",
       "_origin": "ast",
       "id": "src_main_java_com_havkz_sybudebug_modules_spectatordetector_spectatordetector_handleplayerspawn",
-      "community": 3,
-      "community_name": "SpectatorDetector.java",
+      "community": 10,
+      "community_name": ".handlePlayerSpawn",
       "norm_label": ".handleplayerspawn()"
     },
     {
@@ -2391,8 +2391,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "entityspawns2cpacket",
-      "community": 3,
-      "community_name": "SpectatorDetector.java",
+      "community": 10,
+      "community_name": ".handlePlayerSpawn",
       "norm_label": "entityspawns2cpacket"
     },
     {
@@ -2402,8 +2402,8 @@
       "source_location": "L159",
       "_origin": "ast",
       "id": "src_main_java_com_havkz_sybudebug_modules_spectatordetector_spectatordetector_handleentityremove",
-      "community": 3,
-      "community_name": "SpectatorDetector.java",
+      "community": 10,
+      "community_name": ".handlePlayerSpawn",
       "norm_label": ".handleentityremove()"
     },
     {
@@ -2435,8 +2435,8 @@
       "source_location": "L181",
       "_origin": "ast",
       "id": "src_main_java_com_havkz_sybudebug_modules_spectatordetector_spectatordetector_handlewaypoint",
-      "community": 3,
-      "community_name": "SpectatorDetector.java",
+      "community": 10,
+      "community_name": ".handlePlayerSpawn",
       "norm_label": ".handlewaypoint()"
     },
     {
@@ -2446,8 +2446,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "src_main_java_com_havkz_sybudebug_modules_spectatordetector_java_waypoints2cpacket",
-      "community": 3,
-      "community_name": "SpectatorDetector.java",
+      "community": 10,
+      "community_name": ".handlePlayerSpawn",
       "norm_label": "waypoints2cpacket"
     },
     {
@@ -2457,8 +2457,8 @@
       "source_location": "L193",
       "_origin": "ast",
       "id": "src_main_java_com_havkz_sybudebug_modules_spectatordetector_spectatordetector_dimension",
-      "community": 3,
-      "community_name": "SpectatorDetector.java",
+      "community": 10,
+      "community_name": ".handlePlayerSpawn",
       "norm_label": ".dimension()"
     },
     {
@@ -2600,8 +2600,8 @@
       "source_location": "L286",
       "_origin": "ast",
       "id": "src_main_java_com_havkz_sybudebug_modules_spectatordetector_spectatordetector_refreshlivepositions",
-      "community": 3,
-      "community_name": "SpectatorDetector.java",
+      "community": 10,
+      "community_name": ".handlePlayerSpawn",
       "norm_label": ".refreshlivepositions()"
     },
     {
@@ -2611,8 +2611,8 @@
       "source_location": "L300",
       "_origin": "ast",
       "id": "src_main_java_com_havkz_sybudebug_modules_spectatordetector_spectatordetector_applytrackedplayer",
-      "community": 3,
-      "community_name": "SpectatorDetector.java",
+      "community": 10,
+      "community_name": ".handlePlayerSpawn",
       "norm_label": ".applytrackedplayer()"
     },
     {
@@ -2677,8 +2677,8 @@
       "source_location": "L368",
       "_origin": "ast",
       "id": "src_main_java_com_havkz_sybudebug_modules_spectatordetector_tracermode",
-      "community": 15,
-      "community_name": "AzimuthTrackedWaypointAccessor.java",
+      "community": 3,
+      "community_name": "SpectatorDetector.java",
       "norm_label": "tracermode"
     },
     {
@@ -2688,8 +2688,8 @@
       "source_location": "L368",
       "_origin": "ast",
       "id": "src_main_java_com_havkz_sybudebug_modules_spectatordetector_tracermode_live_only",
-      "community": 15,
-      "community_name": "AzimuthTrackedWaypointAccessor.java",
+      "community": 3,
+      "community_name": "SpectatorDetector.java",
       "norm_label": "live_only"
     },
     {
@@ -2699,8 +2699,8 @@
       "source_location": "L368",
       "_origin": "ast",
       "id": "src_main_java_com_havkz_sybudebug_modules_spectatordetector_tracermode_live_and_last_known",
-      "community": 15,
-      "community_name": "AzimuthTrackedWaypointAccessor.java",
+      "community": 3,
+      "community_name": "SpectatorDetector.java",
       "norm_label": "live_and_last_known"
     },
     {
@@ -2820,8 +2820,8 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "src_main_java_com_havkz_sybudebug_tracking_playertracker_playertracker_prune",
-      "community": 10,
-      "community_name": ".handlePlayerSpawn",
+      "community": 3,
+      "community_name": "SpectatorDetector.java",
       "norm_label": ".prune()"
     },
     {
@@ -2831,8 +2831,8 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "src_main_java_com_havkz_sybudebug_tracking_playertracker_playertracker_clear",
-      "community": 10,
-      "community_name": ".handlePlayerSpawn",
+      "community": 3,
+      "community_name": "SpectatorDetector.java",
       "norm_label": ".clear()"
     },
     {
@@ -3007,8 +3007,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "src_main_java_com_havkz_sybudebug_tracking_waypointtracker_waypointtracker_clear",
-      "community": 11,
-      "community_name": "PanicMode",
+      "community": 3,
+      "community_name": "SpectatorDetector.java",
       "norm_label": ".clear()"
     },
     {
@@ -3243,10 +3243,21 @@
       "norm_label": "changelog"
     },
     {
-      "label": "1.1.0",
+      "label": "1.1.1",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
       "source_location": "L3",
+      "_origin": "ast",
+      "id": "changelog_1_1_1",
+      "community": 0,
+      "community_name": "Meteor Addon Template",
+      "norm_label": "1.1.1"
+    },
+    {
+      "label": "1.1.0",
+      "file_type": "document",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L7",
       "_origin": "ast",
       "id": "changelog_1_1_0",
       "community": 0,
@@ -3257,7 +3268,7 @@
       "label": "1.0.0",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L8",
+      "source_location": "L12",
       "_origin": "ast",
       "id": "changelog_1_0_0",
       "community": 0,
@@ -3268,7 +3279,7 @@
       "label": "0.12.0",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L14",
+      "source_location": "L18",
       "_origin": "ast",
       "id": "changelog_0_12_0",
       "community": 0,
@@ -3279,7 +3290,7 @@
       "label": "0.11.0",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L19",
+      "source_location": "L23",
       "_origin": "ast",
       "id": "changelog_0_11_0",
       "community": 0,
@@ -3290,7 +3301,7 @@
       "label": "0.10.0",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L24",
+      "source_location": "L28",
       "_origin": "ast",
       "id": "changelog_0_10_0",
       "community": 0,
@@ -3301,7 +3312,7 @@
       "label": "0.9.0",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L29",
+      "source_location": "L33",
       "_origin": "ast",
       "id": "changelog_0_9_0",
       "community": 0,
@@ -3312,7 +3323,7 @@
       "label": "0.8.0",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L33",
+      "source_location": "L37",
       "_origin": "ast",
       "id": "changelog_0_8_0",
       "community": 0,
@@ -3323,7 +3334,7 @@
       "label": "0.7.0",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L37",
+      "source_location": "L41",
       "_origin": "ast",
       "id": "changelog_0_7_0",
       "community": 0,
@@ -3334,7 +3345,7 @@
       "label": "0.6.0",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L41",
+      "source_location": "L45",
       "_origin": "ast",
       "id": "changelog_0_6_0",
       "community": 0,
@@ -3345,7 +3356,7 @@
       "label": "0.5.0",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L45",
+      "source_location": "L49",
       "_origin": "ast",
       "id": "changelog_0_5_0",
       "community": 0,
@@ -3356,7 +3367,7 @@
       "label": "0.4.0",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L49",
+      "source_location": "L53",
       "_origin": "ast",
       "id": "changelog_0_4_0",
       "community": 0,
@@ -3367,7 +3378,7 @@
       "label": "0.3.0",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L53",
+      "source_location": "L57",
       "_origin": "ast",
       "id": "changelog_0_3_0",
       "community": 0,
@@ -3378,7 +3389,7 @@
       "label": "0.2.0",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L57",
+      "source_location": "L61",
       "_origin": "ast",
       "id": "changelog_0_2_0",
       "community": 0,
@@ -3389,7 +3400,7 @@
       "label": "0.1.0",
       "file_type": "document",
       "source_file": "CHANGELOG.md",
-      "source_location": "L61",
+      "source_location": "L65",
       "_origin": "ast",
       "id": "changelog_0_1_0",
       "community": 0,
@@ -3463,15 +3474,15 @@
       "norm_label": "actions"
     },
     {
-      "label": "Base activity heatmap",
+      "label": "L\u00fcmmelFinder activity heatmap",
       "file_type": "document",
       "source_file": "README.md",
       "source_location": "L40",
       "_origin": "ast",
-      "id": "readme_base_activity_heatmap",
+      "id": "readme_l\u00fcmmelfinder_activity_heatmap",
       "community": 0,
       "community_name": "Meteor Addon Template",
-      "norm_label": "base activity heatmap"
+      "norm_label": "lummelfinder activity heatmap"
     },
     {
       "label": "Known limits",
@@ -3518,15 +3529,15 @@
       "norm_label": "test matrix"
     },
     {
-      "label": "BaseActivityDetector checks",
+      "label": "L\u00fcmmelFinder checks",
       "file_type": "document",
       "source_file": "TESTING.md",
       "source_location": "L19",
       "_origin": "ast",
-      "id": "testing_baseactivitydetector_checks",
+      "id": "testing_l\u00fcmmelfinder_checks",
       "community": 0,
       "community_name": "Meteor Addon Template",
-      "norm_label": "baseactivitydetector checks"
+      "norm_label": "lummelfinder checks"
     }
   ],
   "links": [
@@ -11407,7 +11418,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L24",
+      "source_location": "L28",
       "weight": 1.0,
       "_origin": "ast",
       "source": "changelog_changelog",
@@ -11418,7 +11429,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L19",
+      "source_location": "L23",
       "weight": 1.0,
       "_origin": "ast",
       "source": "changelog_changelog",
@@ -11429,7 +11440,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L14",
+      "source_location": "L18",
       "weight": 1.0,
       "_origin": "ast",
       "source": "changelog_changelog",
@@ -11440,7 +11451,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L61",
+      "source_location": "L65",
       "weight": 1.0,
       "_origin": "ast",
       "source": "changelog_changelog",
@@ -11451,7 +11462,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L57",
+      "source_location": "L61",
       "weight": 1.0,
       "_origin": "ast",
       "source": "changelog_changelog",
@@ -11462,7 +11473,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L53",
+      "source_location": "L57",
       "weight": 1.0,
       "_origin": "ast",
       "source": "changelog_changelog",
@@ -11473,7 +11484,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L49",
+      "source_location": "L53",
       "weight": 1.0,
       "_origin": "ast",
       "source": "changelog_changelog",
@@ -11484,7 +11495,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L45",
+      "source_location": "L49",
       "weight": 1.0,
       "_origin": "ast",
       "source": "changelog_changelog",
@@ -11495,7 +11506,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L41",
+      "source_location": "L45",
       "weight": 1.0,
       "_origin": "ast",
       "source": "changelog_changelog",
@@ -11506,7 +11517,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L37",
+      "source_location": "L41",
       "weight": 1.0,
       "_origin": "ast",
       "source": "changelog_changelog",
@@ -11517,7 +11528,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L33",
+      "source_location": "L37",
       "weight": 1.0,
       "_origin": "ast",
       "source": "changelog_changelog",
@@ -11528,7 +11539,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L29",
+      "source_location": "L33",
       "weight": 1.0,
       "_origin": "ast",
       "source": "changelog_changelog",
@@ -11539,7 +11550,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L8",
+      "source_location": "L12",
       "weight": 1.0,
       "_origin": "ast",
       "source": "changelog_changelog",
@@ -11550,11 +11561,22 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CHANGELOG.md",
-      "source_location": "L3",
+      "source_location": "L7",
       "weight": 1.0,
       "_origin": "ast",
       "source": "changelog_changelog",
       "target": "changelog_1_1_0",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CHANGELOG.md",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "changelog_changelog",
+      "target": "changelog_1_1_1",
       "confidence_score": 1.0
     },
     {
@@ -11588,17 +11610,6 @@
       "_origin": "ast",
       "source": "readme_sybu_debug_by_v0trex",
       "target": "readme_actions",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L40",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "readme_sybu_debug_by_v0trex",
-      "target": "readme_base_activity_heatmap",
       "confidence_score": 1.0
     },
     {
@@ -11649,6 +11660,17 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "README.md",
+      "source_location": "L40",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "readme_sybu_debug_by_v0trex",
+      "target": "readme_l\u00fcmmelfinder_activity_heatmap",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
       "source_location": "L30",
       "weight": 1.0,
       "_origin": "ast",
@@ -11675,10 +11697,10 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "testing_test_matrix",
-      "target": "testing_baseactivitydetector_checks",
+      "target": "testing_l\u00fcmmelfinder_checks",
       "confidence_score": 1.0
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "9a541d5e07be9f4cffa8e3fd8c214f89ee343405"
+  "built_at_commit": "5410337dbf22fca594e41d82156ba6c57c71ce79"
 }

@@ -1,16 +1,16 @@
 # Graph Report - Sybu-Debug  (2026-08-31)
 
 ## Corpus Check
-- 28 files · ~8,991 words
+- 28 files · ~9,005 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 319 nodes · 699 edges · 16 communities (15 shown, 1 thin omitted)
+- 320 nodes · 700 edges · 15 communities
 - Extraction: 82% EXTRACTED · 18% INFERRED · 0% AMBIGUOUS · INFERRED: 128 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `9a541d5e`
+- Built from commit: `5410337d`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -28,7 +28,6 @@
 - TracerMode
 - PositionalTrackedWaypointAccessor.java
 - ActivityScanner
-- AzimuthTrackedWaypointAccessor.java
 
 ## God Nodes (most connected - your core abstractions)
 1. `SpectatorDetector` - 42 edges
@@ -38,8 +37,8 @@
 5. `DetectionEngine` - 21 edges
 6. `ActivityScanner` - 17 edges
 7. `Entry` - 17 edges
-8. `CoreSelfTest` - 15 edges
-9. `Changelog` - 15 edges
+8. `Changelog` - 16 edges
+9. `CoreSelfTest` - 15 edges
 10. `DetectionSignal` - 12 edges
 
 ## Surprising Connections (you probably didn't know these)
@@ -57,11 +56,11 @@
 ## Import Cycles
 - None detected.
 
-## Communities (16 total, 1 thin omitted)
+## Communities (15 total, 0 thin omitted)
 
 ### Community 0 - "Meteor Addon Template"
 Cohesion: 0.07
-Nodes (25): 0.10.0, 0.11.0, 0.12.0, 0.1.0, 0.2.0, 0.3.0, 0.4.0, 0.5.0 (+17 more)
+Nodes (26): 0.10.0, 0.11.0, 0.12.0, 0.1.0, 0.2.0, 0.3.0, 0.4.0, 0.5.0 (+18 more)
 
 ### Community 1 - "SybuDebugAddon"
 Cohesion: 0.31
@@ -73,11 +72,11 @@ Nodes (3): gradlew script, die(), warn()
 
 ### Community 3 - "SpectatorDetector.java"
 Cohesion: 0.07
-Nodes (16): EntitySpawnS2CPacket, Packet, PlayerListS2CPacket, Receive, SettingColor, DetectionCandidate, EventHandler, GameJoinedEvent (+8 more)
+Nodes (18): Module, Packet, PlayerListS2CPacket, Receive, SettingColor, DetectionCandidate, EventHandler, GameJoinedEvent (+10 more)
 
 ### Community 4 - "Override"
 Cohesion: 0.10
-Nodes (19): BlockUpdateEvent, ChunkDataEvent, Module, BaseActivityDetector, ChunkPos, EventHandler, GameJoinedEvent, GameLeftEvent (+11 more)
+Nodes (18): BlockUpdateEvent, ChunkDataEvent, BaseActivityDetector, ChunkPos, EventHandler, GameJoinedEvent, GameLeftEvent, Override (+10 more)
 
 ### Community 5 - "Sybu Debug"
 Cohesion: 0.15
@@ -91,8 +90,12 @@ Nodes (7): ActivityHeatmap, Color, ActivityPoint, BlockPos, ChunkActivityData, C
 Cohesion: 0.13
 Nodes (5): DetectionActionState, DetectionEngine, DetectionHistory, PacketEvidence, CoreSelfTest
 
+### Community 10 - ".handlePlayerSpawn"
+Cohesion: 0.11
+Nodes (4): EntitySpawnS2CPacket, WaypointS2CPacket, Entry, PlayerTracker
+
 ### Community 11 - "PanicMode"
-Cohesion: 0.12
+Cohesion: 0.13
 Nodes (16): AzimuthTrackedWaypointAccessor, Accessor, Mixin, ChunkTrackedWaypointAccessor, Accessor, ChunkPos, Mixin, Accessor (+8 more)
 
 ### Community 12 - "TracerMode"
@@ -107,29 +110,24 @@ Nodes (7): ConfidenceCalculator, Level, CONFIRMED, IGNORE, LIKELY, LOW, POSSIBLE
 Cohesion: 0.21
 Nodes (10): BlockState, Chunk, ClientWorld, ActivityType, HOLE, OBSIDIAN, ActivityScanner, Context (+2 more)
 
-### Community 15 - "AzimuthTrackedWaypointAccessor.java"
-Cohesion: 0.67
-Nodes (3): TracerMode, LIVE_AND_LAST_KNOWN, LIVE_ONLY
-
 ## Knowledge Gaps
-- **47 isolated node(s):** `HOLE`, `OBSIDIAN`, `IGNORE`, `LOW`, `POSSIBLE` (+42 more)
+- **48 isolated node(s):** `HOLE`, `OBSIDIAN`, `IGNORE`, `LOW`, `POSSIBLE` (+43 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **1 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `SpectatorDetector` connect `SpectatorDetector.java` to `Override`, `DetectionEngine`, `.handlePlayerSpawn`, `PanicMode`, `TracerMode`, `AzimuthTrackedWaypointAccessor.java`?**
-  _High betweenness centrality (0.251) - this node is a cross-community bridge._
-- **Why does `BaseActivityDetector` connect `Override` to `ChunkActivityData`, `ActivityScanner`?**
-  _High betweenness centrality (0.185) - this node is a cross-community bridge._
+- **Why does `SpectatorDetector` connect `SpectatorDetector.java` to `DetectionEngine`, `.handlePlayerSpawn`, `PanicMode`, `TracerMode`?**
+  _High betweenness centrality (0.250) - this node is a cross-community bridge._
+- **Why does `BaseActivityDetector` connect `Override` to `SpectatorDetector.java`, `ChunkActivityData`, `ActivityScanner`?**
+  _High betweenness centrality (0.184) - this node is a cross-community bridge._
 - **Why does `WaypointTracker` connect `PanicMode` to `.handlePlayerSpawn`, `SpectatorDetector.java`?**
-  _High betweenness centrality (0.129) - this node is a cross-community bridge._
+  _High betweenness centrality (0.128) - this node is a cross-community bridge._
 - **What connects `HOLE`, `OBSIDIAN`, `IGNORE` to the rest of the system?**
-  _47 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _48 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Meteor Addon Template` be split into smaller, more focused modules?**
-  _Cohesion score 0.07142857142857142 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06896551724137931 - nodes in this community are weakly interconnected._
 - **Should `SpectatorDetector.java` be split into smaller, more focused modules?**
-  _Cohesion score 0.07374890254609306 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06768905341089371 - nodes in this community are weakly interconnected._
 - **Should `Override` be split into smaller, more focused modules?**
-  _Cohesion score 0.10121951219512196 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.10384615384615385 - nodes in this community are weakly interconnected._

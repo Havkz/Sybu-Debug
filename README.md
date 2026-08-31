@@ -1,6 +1,6 @@
 # Sybu Debug by V0trex
 
-Meteor Client addon by **V0trex** for Minecraft Java Edition **1.21.11**. It adds the exact Meteor category **Sybu Debug** containing **SpectatorDetector** and **BaseActivityDetector**.
+Meteor Client addon by **V0trex** for Minecraft Java Edition **1.21.11**. It adds the exact Meteor category **Sybu Debug** containing **SpectatorDetector** and **LümmelFinder**.
 
 ## Installation
 
@@ -37,9 +37,9 @@ Exact positions can show a 3D tracer, box, name, distance, confidence, and live/
 
 `Logoff On Detect` cleanly disconnects with `SpectatorDetector: spectator detected`; it never closes Minecraft. Warning, panic, and disconnect run in that order and panic/logoff trigger at most once per candidate.
 
-## Base activity heatmap
+## LümmelFinder activity heatmap
 
-`BaseActivityDetector` passively analyzes normal client-visible chunk data. It treats enclosed vertical holes and visible obsidian as historical player-activity markers, then renders a transparent surface heatmap: red near activity, yellow/orange at medium distance, and green far from known activity. Green means only **low visible activity**, never a confirmed base.
+`LümmelFinder` passively analyzes normal client-visible chunk data. It treats enclosed vertical holes and visible obsidian as historical player-activity markers, then renders a transparent surface heatmap: red near activity, yellow/orange at medium distance, and green far from known activity. Green means only **low visible activity**, never a confirmed base.
 
 Likely ruined-portal obsidian is ignored when its 5-block X/Y/Z neighborhood contains crying obsidian or a combination of netherrack with magma/lava. The module uses no seed, probing packets, anti-xray bypass, tunnels, or stairs.
 
