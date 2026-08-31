@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.0
+
+- Prioritized newly loaded chunks outward from the player's current position.
+- Moved full hole and obsidian analysis to bounded background workers.
+- Rejected unsupported sky structures when deriving terrain height and smoothed surface samples and chunk seams.
+- Reduced false positives by requiring five-block-deep, surface-near enclosed holes.
+
 ## 1.1.1
 
 - Renamed the visible activity module to `LümmelFinder`.

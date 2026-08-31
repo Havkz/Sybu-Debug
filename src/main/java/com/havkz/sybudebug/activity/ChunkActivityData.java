@@ -31,6 +31,7 @@ public final class ChunkActivityData {
     public int resolution() { return resolution; }
     public int gridSize() { return gridSize; }
     public int surfaceY(int index) { return surfaceY[index]; }
+    public void surfaceY(int index, int value) { surfaceY[index] = value; }
     public double nearestDistanceSquared(int index) { return nearestDistanceSquared[index]; }
     public void nearestDistanceSquared(int index, double value) { nearestDistanceSquared[index] = value; }
     public Color color(int index) { return colors[index]; }

@@ -33,11 +33,15 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public final class BaseActivityDetector extends Module {
     private static final int MAX_CACHED_CHUNKS = 2048;
-    private static final int CHUNKS_SCANNED_PER_TICK = 1;
+    private static final int SNAPSHOTS_PER_TICK = 1;
+    private static final int MAX_IN_FLIGHT = 2;
     private static final int HEATMAPS_UPDATED_PER_TICK = 2;
     private static final double LOW_SAMPLE_RATIO = 0.75;
 
@@ -144,13 +148,17 @@ public final class BaseActivityDetector extends Module {
         .build());
 
     private final Map<Long, ChunkActivityData> chunks = new LinkedHashMap<>();
-    private final ArrayDeque<WorldChunk> scanQueue = new ArrayDeque<>();
+    private final PriorityQueue<QueuedChunk> scanQueue = new PriorityQueue<>((a, b) -> Double.compare(a.distanceSquared, b.distanceSquared));
     private final Set<Long> queuedChunks = new HashSet<>();
     private final ArrayDeque<Long> dirtyQueue = new ArrayDeque<>();
     private final Set<Long> dirtyChunks = new HashSet<>();
     private final Set<Long> notifiedChunks = new HashSet<>();
     private final List<ActivityPoint> nearbyPoints = new ArrayList<>();
-    private ActivityScanner scanner;
+    private final Set<Long> inFlight = new HashSet<>();
+    private ExecutorService scanExecutor;
+    private int generation;
+    private int playerChunkX = Integer.MIN_VALUE;
+    private int playerChunkZ = Integer.MIN_VALUE;
     private int ticks;
     private long lastNotification;
 
@@ -199,21 +207,41 @@ public final class BaseActivityDetector extends Module {
     @EventHandler
     private void onTick(TickEvent.Post event) {
         if (mc.world == null || mc.player == null) return;
-        if (scanner == null) scanner = new ActivityScanner(mc.world);
-
-        for (int i = 0; i < CHUNKS_SCANNED_PER_TICK && !scanQueue.isEmpty(); i++) analyze(scanQueue.removeFirst());
+        reprioritizeIfNeeded();
+        for (int i = 0; i < SNAPSHOTS_PER_TICK && inFlight.size() < MAX_IN_FLIGHT && !scanQueue.isEmpty(); i++) analyze(scanQueue.remove());
         for (int i = 0; i < HEATMAPS_UPDATED_PER_TICK && !dirtyQueue.isEmpty(); i++) updateHeatmap(dirtyQueue.removeFirst());
         if (++ticks % 20 == 0) prune();
     }
 
-    private void analyze(WorldChunk chunk) {
-        long key = chunk.getPos().toLong();
+    private void analyze(QueuedChunk queued) {
+        long key = queued.pos.toLong();
         queuedChunks.remove(key);
-        if (!withinRange(chunk.getPos()) || !mc.world.getChunkManager().isChunkLoaded(chunk.getPos().x, chunk.getPos().z)) return;
+        if (!withinRange(queued.pos) || !mc.world.getChunkManager().isChunkLoaded(queued.pos.x, queued.pos.z)) return;
+        Chunk chunk = mc.world.getChunk(queued.pos.x, queued.pos.z, ChunkStatus.FULL, false);
+        if (!(chunk instanceof WorldChunk worldChunk)) return;
+        ActivityScanner.Snapshot snapshot = ActivityScanner.snapshot(worldChunk, mc.world.getBottomY(), mc.world.getHeight());
+        int currentGeneration = generation;
+        int resolution = sampleResolution.get().blocks;
+        boolean holes = enableHoles.get(), obsidian = enableObsidian.get();
+        inFlight.add(key);
+        scanExecutor.submit(() -> {
+            try {
+                ChunkActivityData data = ActivityScanner.scan(snapshot, resolution, holes, obsidian);
+                mc.execute(() -> installResult(key, currentGeneration, data));
+            } catch (RuntimeException exception) {
+                SybuDebugAddon.LOG.warn("LümmelFinder failed to scan chunk {}", queued.pos, exception);
+                mc.execute(() -> { if (currentGeneration == generation) inFlight.remove(key); });
+            }
+        });
+    }
 
-        ChunkActivityData data = scanner.scan(chunk, sampleResolution.get().blocks, enableHoles.get(), enableObsidian.get());
+    private void installResult(long key, int resultGeneration, ChunkActivityData data) {
+        if (resultGeneration != generation) return;
+        inFlight.remove(key);
+        if (mc.world == null || !isActive() || !withinRange(data.chunkPos())) return;
         chunks.put(key, data);
-        markNearbyDirty(chunk.getPos());
+        smoothChunkEdges(data);
+        markNearbyDirty(data.chunkPos());
         trimCache();
     }
 
@@ -329,15 +357,19 @@ public final class BaseActivityDetector extends Module {
         Chunk chunk = mc.world.getChunk(chunkX, chunkZ, ChunkStatus.FULL, false);
         if (!(chunk instanceof WorldChunk worldChunk) || !withinRange(worldChunk.getPos())) return;
         long key = worldChunk.getPos().toLong();
-        if (queuedChunks.add(key)) scanQueue.addLast(worldChunk);
+        if (!inFlight.contains(key) && queuedChunks.add(key)) scanQueue.add(new QueuedChunk(worldChunk.getPos(), distanceSquared(worldChunk.getPos())));
     }
 
     private void seedLoadedChunks() {
         if (mc.world == null || mc.player == null) return;
-        scanner = new ActivityScanner(mc.world);
+        scanExecutor = Executors.newFixedThreadPool(MAX_IN_FLIGHT, runnable -> {
+            Thread thread = new Thread(runnable, "LummelFinder scanner");
+            thread.setDaemon(true);
+            return thread;
+        });
         for (Chunk chunk : Utils.chunks(true)) if (chunk instanceof WorldChunk worldChunk && withinRange(worldChunk.getPos())) {
             long key = worldChunk.getPos().toLong();
-            if (queuedChunks.add(key)) scanQueue.addLast(worldChunk);
+            if (queuedChunks.add(key)) scanQueue.add(new QueuedChunk(worldChunk.getPos(), distanceSquared(worldChunk.getPos())));
         }
     }
 
@@ -346,6 +378,39 @@ public final class BaseActivityDetector extends Module {
         double distanceSquared = ActivityHeatmap.horizontalDistanceSquared(mc.player.getX(), mc.player.getZ(), pos.getCenterX(), pos.getCenterZ());
         double max = maxAnalysisDistance.get() + 24.0;
         return distanceSquared <= max * max;
+    }
+
+    private double distanceSquared(ChunkPos pos) {
+        return mc.player == null ? Double.MAX_VALUE : ActivityHeatmap.horizontalDistanceSquared(mc.player.getX(), mc.player.getZ(), pos.getCenterX(), pos.getCenterZ());
+    }
+
+    private void reprioritizeIfNeeded() {
+        int x = mc.player.getBlockX() >> 4, z = mc.player.getBlockZ() >> 4;
+        if (x == playerChunkX && z == playerChunkZ) return;
+        playerChunkX = x;
+        playerChunkZ = z;
+        List<QueuedChunk> queued = new ArrayList<>(scanQueue);
+        scanQueue.clear();
+        for (QueuedChunk chunk : queued) scanQueue.add(new QueuedChunk(chunk.pos, distanceSquared(chunk.pos)));
+    }
+
+    private void smoothChunkEdges(ChunkActivityData data) {
+        smoothEdge(data, chunks.get(ChunkPos.toLong(data.chunkPos().x - 1, data.chunkPos().z)), true, false);
+        smoothEdge(data, chunks.get(ChunkPos.toLong(data.chunkPos().x + 1, data.chunkPos().z)), true, true);
+        smoothEdge(data, chunks.get(ChunkPos.toLong(data.chunkPos().x, data.chunkPos().z - 1)), false, false);
+        smoothEdge(data, chunks.get(ChunkPos.toLong(data.chunkPos().x, data.chunkPos().z + 1)), false, true);
+    }
+
+    private void smoothEdge(ChunkActivityData data, ChunkActivityData neighbor, boolean xEdge, boolean positive) {
+        if (neighbor == null || neighbor.resolution() != data.resolution()) return;
+        int last = data.gridSize() - 1;
+        for (int i = 0; i <= last; i++) {
+            int a = xEdge ? data.index(positive ? last : 0, i) : data.index(i, positive ? last : 0);
+            int b = xEdge ? neighbor.index(positive ? 0 : last, i) : neighbor.index(i, positive ? 0 : last);
+            int average = (data.surfaceY(a) + neighbor.surfaceY(b)) / 2;
+            data.surfaceY(a, average);
+            neighbor.surfaceY(b, average);
+        }
     }
 
     private void markNearbyDirty(ChunkPos pos) {
@@ -397,6 +462,8 @@ public final class BaseActivityDetector extends Module {
     }
 
     private void clear() {
+        generation++;
+        if (scanExecutor != null) scanExecutor.shutdownNow();
         chunks.clear();
         scanQueue.clear();
         queuedChunks.clear();
@@ -404,7 +471,9 @@ public final class BaseActivityDetector extends Module {
         dirtyChunks.clear();
         notifiedChunks.clear();
         nearbyPoints.clear();
-        scanner = null;
+        scanExecutor = null;
+        inFlight.clear();
+        playerChunkX = playerChunkZ = Integer.MIN_VALUE;
         ticks = 0;
         lastNotification = 0;
     }
@@ -415,4 +484,6 @@ public final class BaseActivityDetector extends Module {
         private final int blocks;
         SampleResolution(int blocks) { this.blocks = blocks; }
     }
+
+    private record QueuedChunk(ChunkPos pos, double distanceSquared) {}
 }

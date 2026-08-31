@@ -23,6 +23,7 @@ public final class CoreSelfTest {
         testI_LogoffIsOneShot();
         testEvidenceDecayAndBounds();
         testActivityMathAndPortalFilter();
+        testSurfaceSmoothing();
     }
 
     private static void testA_NormalSurvivalNoAlarm() {
@@ -121,6 +122,17 @@ public final class CoreSelfTest {
         check(ActivityScanner.ruinedPortalEvidence(4, 1, 0, 0), "netherrack plus magma must identify portal evidence");
         check(ActivityScanner.ruinedPortalEvidence(0, 0, 0, 1), "crying obsidian must identify portal evidence");
         check(!ActivityScanner.ruinedPortalEvidence(8, 0, 0, 0), "netherrack alone must not hide player obsidian");
+    }
+
+    private static void testSurfaceSmoothing() {
+        int[] heights = {64, 64, 64, 64, 200, 64, 64, 64, 64};
+        ActivityScanner.smoothSurface(heights, 3, 5);
+        check(heights[4] == 64, "surface median must reject isolated sky structures");
+        for (int z = 0; z < 3; z++) for (int x = 0; x < 3; x++) {
+            int i = z * 3 + x;
+            if (x > 0) check(Math.abs(heights[i] - heights[i - 1]) <= 5, "surface x slope must be bounded");
+            if (z > 0) check(Math.abs(heights[i] - heights[i - 3]) <= 5, "surface z slope must be bounded");
+        }
     }
 
     private static DetectionCandidate explicitSpectator(DetectionEngine engine, UUID uuid) {
