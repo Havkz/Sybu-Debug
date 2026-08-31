@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.6.0
+
+- Removed the redundant overlay-opacity slider; transparency comes directly from the two Meteor color pickers.
+- Redefined Chunk Based as a flat binary overlay: activity color only when more than half of the 16x16 chunk area lies within the configured red radius.
+- Removed gradients and terrain-following geometry from Chunk Based while keeping both in Smooth Layer.
+- Restored the previous one-quad-per-chunk rendering cost for Smooth Layer and stopped recoloring unaffected chunks during streaming.
+
 ## 1.5.0
 
 - Replaced the separate overlay-alpha slider with standard Meteor color pickers for activity and untouched terrain.

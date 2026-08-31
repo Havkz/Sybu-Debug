@@ -31,16 +31,12 @@ public final class ActivityHeatmap {
     }
 
     public static Color color(double normalized, Color near, Color far) {
-        return color(normalized, near, far, 100);
-    }
-
-    public static Color color(double normalized, Color near, Color far, int opacityPercent) {
         double t = Math.max(0, Math.min(1, normalized));
         return new Color(
             mix(near.r, far.r, t),
             mix(near.g, far.g, t),
             mix(near.b, far.b, t),
-            mix(near.a, far.a, t) * Math.max(0, Math.min(100, opacityPercent)) / 100);
+            mix(near.a, far.a, t));
     }
 
     private static int mix(int from, int to, double amount) { return (int) Math.round(from + (to - from) * amount); }

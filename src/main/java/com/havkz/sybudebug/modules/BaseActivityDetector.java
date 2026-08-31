@@ -56,11 +56,8 @@ public final class BaseActivityDetector extends Module {
     private final Setting<Integer> activityRadius = sgGeneral.add(new IntSetting.Builder()
         .name("red-radius").description("Meters around a hole or obsidian marker that fade from red toward green.").defaultValue(64)
         .range(8, 2048).sliderRange(8, 512).onChanged(value -> recolorAll()).build());
-    private final Setting<Integer> overlayOpacity = sgGeneral.add(new IntSetting.Builder()
-        .name("overlay-opacity").description("Global overlay opacity in percent.").defaultValue(100)
-        .range(0, 100).sliderRange(0, 100).onChanged(value -> recolorAll()).build());
     private final Setting<RenderMode> renderMode = sgGeneral.add(new EnumSetting.Builder<RenderMode>()
-        .name("render-mode").description("Smooth color tiles or one color and surface per chunk.")
+        .name("render-mode").description("Smooth Layer follows terrain; Chunk Based is one flat binary-color quad per chunk.")
         .defaultValue(RenderMode.SMOOTH_LAYER).build());
 
     private final Map<Long, ChunkActivityData> chunks = new LinkedHashMap<>();
@@ -140,18 +137,20 @@ public final class BaseActivityDetector extends Module {
         if (resultGeneration != generation) return;
         inFlight.remove(key);
         if (mc.world == null || !isActive() || !mc.world.getChunkManager().isChunkLoaded(data.chunkPos().x, data.chunkPos().z)) return;
-        chunks.put(key, data);
+        ChunkActivityData previous = chunks.put(key, data);
         smoothChunkEdges(data);
-        recolorAround(data.chunkPos());
+        boolean activityChanged = previous == null ? !data.activityPoints().isEmpty() : !previous.activityPoints().equals(data.activityPoints());
+        if (activityChanged) recolorAround(data.chunkPos()); else updateColors(data);
         trimCache();
         if (rescanAfterFlight.remove(key)) enqueue(data.chunkPos().x, data.chunkPos().z, true);
     }
 
     private void recolorAround(ChunkPos center) {
-        double reach = activityRadius.get() + 24.0;
-        double reachSquared = reach * reach;
-        for (ChunkActivityData data : chunks.values()) if (ActivityHeatmap.horizontalDistanceSquared(
-            center.getCenterX(), center.getCenterZ(), data.chunkPos().getCenterX(), data.chunkPos().getCenterZ()) <= reachSquared) updateColors(data);
+        int chunkRadius = loadedChunkRadius();
+        for (int x = center.x - chunkRadius; x <= center.x + chunkRadius; x++) for (int z = center.z - chunkRadius; z <= center.z + chunkRadius; z++) {
+            ChunkActivityData data = chunks.get(ChunkPos.toLong(x, z));
+            if (data != null) updateColors(data);
+        }
     }
 
     private void recolorAll() { for (ChunkActivityData data : chunks.values()) updateColors(data); }
@@ -160,10 +159,12 @@ public final class BaseActivityDetector extends Module {
         int radius = activityRadius.get();
         double farSquared = (double) radius * radius;
         nearbyPoints.clear();
-        double reach = radius + 24.0, reachSquared = reach * reach;
-        for (ChunkActivityData nearby : chunks.values()) if (ActivityHeatmap.horizontalDistanceSquared(
-            data.chunkPos().getCenterX(), data.chunkPos().getCenterZ(), nearby.chunkPos().getCenterX(), nearby.chunkPos().getCenterZ()) <= reachSquared)
-            nearbyPoints.addAll(nearby.activityPoints());
+        int chunkRadius = loadedChunkRadius();
+        for (int x = data.chunkPos().x - chunkRadius; x <= data.chunkPos().x + chunkRadius; x++)
+            for (int z = data.chunkPos().z - chunkRadius; z <= data.chunkPos().z + chunkRadius; z++) {
+                ChunkActivityData nearby = chunks.get(ChunkPos.toLong(x, z));
+                if (nearby != null) nearbyPoints.addAll(nearby.activityPoints());
+            }
         for (int gz = 0; gz < data.gridSize(); gz++) for (int gx = 0; gx < data.gridSize(); gx++) {
             int index = data.index(gx, gz);
             double worldX = data.chunkPos().getStartX() + gx * data.resolution();
@@ -172,8 +173,25 @@ public final class BaseActivityDetector extends Module {
             for (ActivityPoint point : nearbyPoints) nearest = Math.min(nearest,
                 ActivityHeatmap.horizontalDistanceSquared(worldX, worldZ, point.position().getX() + 0.5, point.position().getZ() + 0.5));
             data.color(index, ActivityHeatmap.color(ActivityHeatmap.normalize(nearest, Math.min(8, radius - 1), radius),
-                activityColor.get(), untouchedColor.get(), overlayOpacity.get()));
+                activityColor.get(), untouchedColor.get()));
         }
+        int redBlocks = 0;
+        for (int z = 0; z < 16; z++) for (int x = 0; x < 16; x++) {
+            double worldX = data.chunkPos().getStartX() + x + 0.5;
+            double worldZ = data.chunkPos().getStartZ() + z + 0.5;
+            for (ActivityPoint point : nearbyPoints) if (ActivityHeatmap.horizontalDistanceSquared(
+                worldX, worldZ, point.position().getX() + 0.5, point.position().getZ() + 0.5) <= farSquared) {
+                redBlocks++;
+                break;
+            }
+        }
+        data.chunkColor(ActivityHeatmap.color(redBlocks > 128 ? 0 : 1, activityColor.get(), untouchedColor.get()));
+    }
+
+    private int loadedChunkRadius() {
+        int requested = (activityRadius.get() + 15) / 16 + 1;
+        int loadedDiameter = mc.options.getViewDistance().getValue() * 2 + 2;
+        return Math.min(requested, loadedDiameter);
     }
 
     @EventHandler
@@ -185,25 +203,26 @@ public final class BaseActivityDetector extends Module {
                 renderChunk(event, data);
                 continue;
             }
-            for (int gz = 0; gz < data.gridSize() - 1; gz++) for (int gx = 0; gx < data.gridSize() - 1; gx++) {
-                int i00 = data.index(gx, gz), i01 = data.index(gx, gz + 1), i11 = data.index(gx + 1, gz + 1), i10 = data.index(gx + 1, gz);
-                double x0 = data.chunkPos().getStartX() + gx * data.resolution(), z0 = data.chunkPos().getStartZ() + gz * data.resolution();
-                double x1 = x0 + data.resolution(), z1 = z0 + data.resolution();
-                event.renderer.quad(x0, data.surfaceY(i00) + 0.03, z0, x0, data.surfaceY(i01) + 0.03, z1,
-                    x1, data.surfaceY(i11) + 0.03, z1, x1, data.surfaceY(i10) + 0.03, z0,
-                    data.color(i00), data.color(i01), data.color(i11), data.color(i10));
-            }
+            renderSmoothChunk(event, data);
         }
     }
 
-    private void renderChunk(Render3DEvent event, ChunkActivityData data) {
+    private void renderSmoothChunk(Render3DEvent event, ChunkActivityData data) {
         int last = data.gridSize() - 1;
         int i00 = data.index(0, 0), i01 = data.index(0, last), i11 = data.index(last, last), i10 = data.index(last, 0);
-        var color = data.color(data.index(last / 2, last / 2));
         double x0 = data.chunkPos().getStartX(), z0 = data.chunkPos().getStartZ();
         double x1 = x0 + 16, z1 = z0 + 16;
         event.renderer.quad(x0, data.surfaceY(i00) + 0.03, z0, x0, data.surfaceY(i01) + 0.03, z1,
-            x1, data.surfaceY(i11) + 0.03, z1, x1, data.surfaceY(i10) + 0.03, z0, color, color, color, color);
+            x1, data.surfaceY(i11) + 0.03, z1, x1, data.surfaceY(i10) + 0.03, z0,
+            data.color(i00), data.color(i01), data.color(i11), data.color(i10));
+    }
+
+    private void renderChunk(Render3DEvent event, ChunkActivityData data) {
+        var color = data.chunkColor();
+        double y = data.averageSurfaceY() + 0.03;
+        double x0 = data.chunkPos().getStartX(), z0 = data.chunkPos().getStartZ();
+        double x1 = x0 + 16, z1 = z0 + 16;
+        event.renderer.quad(x0, y, z0, x0, y, z1, x1, y, z1, x1, y, z0, color, color, color, color);
     }
 
     private void enqueue(int chunkX, int chunkZ, boolean force) {

@@ -124,8 +124,6 @@ public final class CoreSelfTest {
         check(ActivityHeatmap.normalize(160 * 160, 24, 160) == 1, "far activity must normalize to green");
         Color mixed = ActivityHeatmap.color(0.5, new Color(200, 0, 20, 40), new Color(0, 100, 220, 160));
         check(mixed.r == 100 && mixed.g == 50 && mixed.b == 120 && mixed.a == 100, "custom endpoint colors and alpha must blend");
-        check(ActivityHeatmap.color(0.5, new Color(0, 0, 0, 100), new Color(0, 0, 0, 200), 50).a == 75,
-            "overlay opacity must use a zero-to-one-hundred percentage");
         check(ActivityScanner.ruinedPortalEvidence(4, 1, 0, 0), "netherrack plus magma must identify portal evidence");
         check(ActivityScanner.ruinedPortalEvidence(0, 0, 0, 1), "crying obsidian must identify portal evidence");
         check(!ActivityScanner.ruinedPortalEvidence(8, 0, 0, 0), "netherrack alone must not hide player obsidian");

@@ -13,6 +13,7 @@ public final class ChunkActivityData {
     private final double[] nearestDistanceSquared;
     private final Color[] colors;
     private final List<ActivityPoint> activityPoints;
+    private Color chunkColor;
     private boolean lowActivityCandidate;
     private double candidateDistance;
 
@@ -37,6 +38,13 @@ public final class ChunkActivityData {
     public Color color(int index) { return colors[index]; }
     public void color(int index, Color value) { colors[index] = value; }
     public List<ActivityPoint> activityPoints() { return activityPoints; }
+    public Color chunkColor() { return chunkColor; }
+    public void chunkColor(Color value) { chunkColor = value; }
+    public int averageSurfaceY() {
+        long sum = 0;
+        for (int height : surfaceY) sum += height;
+        return Math.round((float) sum / surfaceY.length);
+    }
     public boolean lowActivityCandidate() { return lowActivityCandidate; }
     public void lowActivityCandidate(boolean value) { lowActivityCandidate = value; }
     public double candidateDistance() { return candidateDistance; }

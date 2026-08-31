@@ -1,16 +1,16 @@
 # Graph Report - Sybu-Debug  (2026-08-31)
 
 ## Corpus Check
-- 28 files · ~10,990 words
+- 28 files · ~11,150 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 345 nodes · 771 edges · 14 communities
-- Extraction: 83% EXTRACTED · 17% INFERRED · 0% AMBIGUOUS · INFERRED: 129 edges (avg confidence: 0.8)
+- 350 nodes · 788 edges · 16 communities (15 shown, 1 thin omitted)
+- Extraction: 83% EXTRACTED · 17% INFERRED · 0% AMBIGUOUS · INFERRED: 135 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `0f2440d0`
+- Built from commit: `f4e0dcb3`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -19,23 +19,25 @@
 - SybuDebugAddon
 - gradlew
 - SpectatorDetector.java
+- ChunkTrackedWaypointAccessor.java
 - Sybu Debug
 - ChunkActivityData
 - DetectionEngine
+- PositionalTrackedWaypointAccessor.java
 - PanicMode
 - TracerMode
 - PositionalTrackedWaypointAccessor.java
 - ActivityScanner
-- TracerMode
+- .testActivityMathAndPortalFilter
 
 ## God Nodes (most connected - your core abstractions)
 1. `SpectatorDetector` - 42 edges
-2. `DetectionCandidate` - 38 edges
-3. `BaseActivityDetector` - 37 edges
-4. `ChunkActivityData` - 24 edges
+2. `BaseActivityDetector` - 39 edges
+3. `DetectionCandidate` - 38 edges
+4. `ChunkActivityData` - 27 edges
 5. `ActivityScanner` - 21 edges
 6. `DetectionEngine` - 21 edges
-7. `Changelog` - 20 edges
+7. `Changelog` - 21 edges
 8. `CoreSelfTest` - 18 edges
 9. `Entry` - 17 edges
 10. `DetectionSignal` - 12 edges
@@ -55,11 +57,11 @@
 ## Import Cycles
 - None detected.
 
-## Communities (14 total, 0 thin omitted)
+## Communities (16 total, 1 thin omitted)
 
 ### Community 0 - "Meteor Addon Template"
 Cohesion: 0.06
-Nodes (30): 0.10.0, 0.11.0, 0.12.0, 0.1.0, 0.2.0, 0.3.0, 0.4.0, 0.5.0 (+22 more)
+Nodes (31): 0.10.0, 0.11.0, 0.12.0, 0.1.0, 0.2.0, 0.3.0, 0.4.0, 0.5.0 (+23 more)
 
 ### Community 1 - "SybuDebugAddon"
 Cohesion: 0.31
@@ -71,23 +73,31 @@ Nodes (3): gradlew script, die(), warn()
 
 ### Community 3 - "SpectatorDetector.java"
 Cohesion: 0.06
-Nodes (18): EntitySpawnS2CPacket, Module, Packet, PlayerListS2CPacket, Receive, DetectionCandidate, EventHandler, GameJoinedEvent (+10 more)
+Nodes (19): EntitySpawnS2CPacket, Packet, PlayerListS2CPacket, Receive, DetectionCandidate, EventHandler, GameJoinedEvent, GameLeftEvent (+11 more)
+
+### Community 4 - "ChunkTrackedWaypointAccessor.java"
+Cohesion: 0.53
+Nodes (4): ChunkTrackedWaypointAccessor, Accessor, ChunkPos, Mixin
 
 ### Community 5 - "Sybu Debug"
 Cohesion: 0.15
 Nodes (10): DetectionSignal, CHUNK_ACTIVITY, ENTITY_ACTIVITY, EXPLICIT_SPECTATOR, LIVE_POSITION, PLAYER_INFO_WITHOUT_ENTITY, RECENT_ENTITY_REMOVAL, SPECTATOR_ENTITY_REMOVED (+2 more)
 
 ### Community 6 - "ChunkActivityData"
-Cohesion: 0.06
-Nodes (25): BlockUpdateEvent, ChunkDataEvent, ActivityHeatmap, Color, ActivityPoint, BlockPos, ChunkActivityData, ChunkPos (+17 more)
+Cohesion: 0.07
+Nodes (24): BlockUpdateEvent, ChunkDataEvent, Module, ActivityPoint, BlockPos, ChunkActivityData, ChunkPos, Color (+16 more)
 
 ### Community 9 - "DetectionEngine"
-Cohesion: 0.13
+Cohesion: 0.12
 Nodes (5): DetectionActionState, DetectionEngine, DetectionHistory, PacketEvidence, CoreSelfTest
 
+### Community 10 - "PositionalTrackedWaypointAccessor.java"
+Cohesion: 0.53
+Nodes (4): Accessor, Mixin, Vec3i, PositionalTrackedWaypointAccessor
+
 ### Community 11 - "PanicMode"
-Cohesion: 0.08
-Nodes (17): AzimuthTrackedWaypointAccessor, Accessor, Mixin, ChunkTrackedWaypointAccessor, Accessor, ChunkPos, Mixin, Accessor (+9 more)
+Cohesion: 0.10
+Nodes (10): AzimuthTrackedWaypointAccessor, Accessor, Mixin, Entry, PlayerTracker, Entry, ChunkPos, Vec3i (+2 more)
 
 ### Community 12 - "TracerMode"
 Cohesion: 0.50
@@ -101,28 +111,25 @@ Nodes (7): ConfidenceCalculator, Level, CONFIRMED, IGNORE, LIKELY, LOW, POSSIBLE
 Cohesion: 0.14
 Nodes (12): BlockState, ChunkSection, ClientWorld, Mutable, ActivityType, HOLE, OBSIDIAN, ActivityScanner (+4 more)
 
-### Community 16 - "TracerMode"
-Cohesion: 0.67
-Nodes (3): TracerMode, LIVE_AND_LAST_KNOWN, LIVE_ONLY
-
 ## Knowledge Gaps
-- **50 isolated node(s):** `HOLE`, `OBSIDIAN`, `IGNORE`, `LOW`, `POSSIBLE` (+45 more)
+- **51 isolated node(s):** `HOLE`, `OBSIDIAN`, `IGNORE`, `LOW`, `POSSIBLE` (+46 more)
   These have ≤1 connection - possible missing edges or undocumented components.
+- **1 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `SpectatorDetector` connect `SpectatorDetector.java` to `TracerMode`, `DetectionEngine`, `PanicMode`, `TracerMode`?**
-  _High betweenness centrality (0.233) - this node is a cross-community bridge._
-- **Why does `BaseActivityDetector` connect `ChunkActivityData` to `SpectatorDetector.java`?**
-  _High betweenness centrality (0.177) - this node is a cross-community bridge._
+- **Why does `SpectatorDetector` connect `SpectatorDetector.java` to `DetectionEngine`, `PanicMode`, `TracerMode`, `ChunkActivityData`?**
+  _High betweenness centrality (0.232) - this node is a cross-community bridge._
 - **Why does `WaypointTracker` connect `PanicMode` to `SpectatorDetector.java`?**
-  _High betweenness centrality (0.119) - this node is a cross-community bridge._
+  _High betweenness centrality (0.118) - this node is a cross-community bridge._
 - **What connects `HOLE`, `OBSIDIAN`, `IGNORE` to the rest of the system?**
-  _50 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _51 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Meteor Addon Template` be split into smaller, more focused modules?**
-  _Cohesion score 0.06060606060606061 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.058823529411764705 - nodes in this community are weakly interconnected._
 - **Should `SpectatorDetector.java` be split into smaller, more focused modules?**
-  _Cohesion score 0.061938061938061936 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06164383561643835 - nodes in this community are weakly interconnected._
 - **Should `ChunkActivityData` be split into smaller, more focused modules?**
-  _Cohesion score 0.061754385964912284 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07082494969818913 - nodes in this community are weakly interconnected._
+- **Should `DetectionEngine` be split into smaller, more focused modules?**
+  _Cohesion score 0.12473572938689217 - nodes in this community are weakly interconnected._
