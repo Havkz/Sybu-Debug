@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.4.0
+
+- Ignored tall positive Y outliers before smoothing so buildings and pillars no longer lift the carpet.
+- Added a configurable red activity radius in blocks/meters.
+- Guaranteed that every loaded rendered chunk is queued, including retry and mid-scan block-update cases.
+- Reduced the overlay to pixel-style 8x8-block tiles, cutting rendered quads to one quarter of 1.3.0.
+
 ## 1.3.0
 
 - Increased scanning to five workers and five player-prioritized chunks per tick.

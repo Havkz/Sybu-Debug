@@ -24,6 +24,7 @@ public final class CoreSelfTest {
         testEvidenceDecayAndBounds();
         testActivityMathAndPortalFilter();
         testSurfaceSmoothing();
+        testHighSurfaceOutliers();
         testSurfaceHoleIsActivity();
     }
 
@@ -134,6 +135,14 @@ public final class CoreSelfTest {
             if (x > 0) check(Math.abs(heights[i] - heights[i - 1]) <= 5, "surface x slope must be bounded");
             if (z > 0) check(Math.abs(heights[i] - heights[i - 3]) <= 5, "surface z slope must be bounded");
         }
+    }
+
+    private static void testHighSurfaceOutliers() {
+        int[] heights = new int[256];
+        java.util.Arrays.fill(heights, 64);
+        for (int z = 4; z < 10; z++) for (int x = 4; x < 10; x++) heights[z * 16 + x] = 120;
+        ActivityScanner.filterHighOutliers(heights, 12);
+        check(heights[8 * 16 + 8] == 64, "high building must not lift the terrain carpet");
     }
 
     private static void testSurfaceHoleIsActivity() {

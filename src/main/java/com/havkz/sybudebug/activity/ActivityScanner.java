@@ -43,6 +43,7 @@ public final class ActivityScanner {
             }
             ground[z * 16 + x] = found;
         }
+        filterHighOutliers(ground, 12);
         smoothSurface(ground, 16, 5);
         for (int z = 0; z < 16; z++) for (int x = 0; x < 16; x++) {
             int found = ground[z * 16 + x];
@@ -111,6 +112,13 @@ public final class ActivityScanner {
             if (x > 0) heights[i] = clamp(heights[i], heights[i - 1] - maxStep, heights[i - 1] + maxStep);
             if (z > 0) heights[i] = clamp(heights[i], heights[i - size] - maxStep, heights[i - size] + maxStep);
         }
+    }
+
+    public static void filterHighOutliers(int[] heights, int maxRise) {
+        int[] sorted = heights.clone();
+        Arrays.sort(sorted);
+        int groundLevel = sorted[sorted.length / 2];
+        for (int i = 0; i < heights.length; i++) if (heights[i] > groundLevel + maxRise) heights[i] = groundLevel;
     }
 
     private static boolean isHoleTop(Snapshot s, int x, int y, int z) {
