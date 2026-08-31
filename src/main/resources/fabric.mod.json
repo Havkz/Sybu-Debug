@@ -3,7 +3,7 @@
   "id": "sybu-debug",
   "version": "${version}",
   "name": "Sybu Debug by V0trex",
-  "description": "Client-side spectator detection for Meteor Client by V0trex.",
+  "description": "Client-side spectator detection and visible activity heatmaps for Meteor Client by V0trex.",
   "authors": [
     "V0trex"
   ],

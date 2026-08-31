@@ -1,5 +1,7 @@
 package com.havkz.sybudebug.detection;
 
+import com.havkz.sybudebug.activity.ActivityHeatmap;
+import com.havkz.sybudebug.activity.ActivityScanner;
 import com.havkz.sybudebug.tracking.PlayerTracker;
 
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ public final class CoreSelfTest {
         testH_PanicIsOneShotAndUsesSnapshot();
         testI_LogoffIsOneShot();
         testEvidenceDecayAndBounds();
+        testActivityMathAndPortalFilter();
     }
 
     private static void testA_NormalSurvivalNoAlarm() {
@@ -109,6 +112,15 @@ public final class CoreSelfTest {
         check(candidate.evidence().stream().filter(e -> e.signal() == DetectionSignal.SPECTATOR_WITH_UUID).count() == 1, "latest evidence replaces duplicate signal");
         engine.tick(NOW + 70_000);
         check(ConfidenceCalculator.calculate(candidate, NOW + 70_000) == 0, "expired evidence must contribute nothing");
+    }
+
+    private static void testActivityMathAndPortalFilter() {
+        check(ActivityHeatmap.horizontalDistanceSquared(0, 0, 1, 1) == 2, "activity distance must use Euclidean X/Z geometry");
+        check(ActivityHeatmap.normalize(24 * 24, 24, 160) == 0, "near activity must normalize to red");
+        check(ActivityHeatmap.normalize(160 * 160, 24, 160) == 1, "far activity must normalize to green");
+        check(ActivityScanner.ruinedPortalEvidence(4, 1, 0, 0), "netherrack plus magma must identify portal evidence");
+        check(ActivityScanner.ruinedPortalEvidence(0, 0, 0, 1), "crying obsidian must identify portal evidence");
+        check(!ActivityScanner.ruinedPortalEvidence(8, 0, 0, 0), "netherrack alone must not hide player obsidian");
     }
 
     private static DetectionCandidate explicitSpectator(DetectionEngine engine, UUID uuid) {

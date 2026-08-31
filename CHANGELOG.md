@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.0
+
+- Added `BaseActivityDetector` with incremental hole and obsidian activity scanning.
+- Added ruined-portal filtering, cached Euclidean proximity heatmaps, and deduplicated low-activity region notifications.
+
 ## 1.0.0
 
 - Finalized the exact `SpectatorDetector` GUI name and `Sybu Debug by V0trex` branding.

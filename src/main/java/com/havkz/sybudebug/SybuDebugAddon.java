@@ -1,6 +1,7 @@
 package com.havkz.sybudebug;
 
 import com.havkz.sybudebug.modules.SpectatorDetector;
+import com.havkz.sybudebug.modules.BaseActivityDetector;
 import com.mojang.logging.LogUtils;
 import meteordevelopment.meteorclient.addons.GithubRepo;
 import meteordevelopment.meteorclient.addons.MeteorAddon;
@@ -16,6 +17,7 @@ public final class SybuDebugAddon extends MeteorAddon {
     public void onInitialize() {
         LOG.info("Initializing Sybu Debug by V0trex");
         Modules.get().add(new SpectatorDetector());
+        Modules.get().add(new BaseActivityDetector());
     }
 
     @Override
