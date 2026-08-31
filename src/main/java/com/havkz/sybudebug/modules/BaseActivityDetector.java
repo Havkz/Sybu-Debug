@@ -12,11 +12,14 @@ import meteordevelopment.meteorclient.events.world.BlockUpdateEvent;
 import meteordevelopment.meteorclient.events.world.ChunkDataEvent;
 import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.settings.BoolSetting;
+import meteordevelopment.meteorclient.settings.ColorSetting;
+import meteordevelopment.meteorclient.settings.EnumSetting;
 import meteordevelopment.meteorclient.settings.IntSetting;
 import meteordevelopment.meteorclient.settings.Setting;
 import meteordevelopment.meteorclient.settings.SettingGroup;
 import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.meteorclient.utils.Utils;
+import meteordevelopment.meteorclient.utils.render.color.SettingColor;
 import meteordevelopment.orbit.EventHandler;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.Chunk;
@@ -44,12 +47,21 @@ public final class BaseActivityDetector extends Module {
         .name("holes").description("Shows enclosed vertical holes as player activity.").defaultValue(true).onChanged(value -> rescan()).build());
     private final Setting<Boolean> enableObsidian = sgGeneral.add(new BoolSetting.Builder()
         .name("obsidian-activity").description("Also treats player-placed-looking obsidian as activity.").defaultValue(false).onChanged(value -> rescan()).build());
-    private final Setting<Integer> overlayAlpha = sgGeneral.add(new IntSetting.Builder()
-        .name("overlay-alpha").description("Transparency of the terrain carpet.").defaultValue(70)
-        .range(10, 200).sliderRange(10, 200).onChanged(value -> recolorAll()).build());
+    private final Setting<SettingColor> activityColor = sgGeneral.add(new ColorSetting.Builder()
+        .name("activity-color").description("Color and transparency near holes or obsidian.")
+        .defaultValue(new SettingColor(255, 40, 40, 70)).onChanged(value -> recolorAll()).build());
+    private final Setting<SettingColor> untouchedColor = sgGeneral.add(new ColorSetting.Builder()
+        .name("untouched-color").description("Color and transparency far from known activity.")
+        .defaultValue(new SettingColor(40, 220, 40, 70)).onChanged(value -> recolorAll()).build());
     private final Setting<Integer> activityRadius = sgGeneral.add(new IntSetting.Builder()
         .name("red-radius").description("Meters around a hole or obsidian marker that fade from red toward green.").defaultValue(64)
-        .range(8, 128).sliderRange(8, 128).onChanged(value -> recolorAll()).build());
+        .range(8, 2048).sliderRange(8, 512).onChanged(value -> recolorAll()).build());
+    private final Setting<Integer> overlayOpacity = sgGeneral.add(new IntSetting.Builder()
+        .name("overlay-opacity").description("Global overlay opacity in percent.").defaultValue(100)
+        .range(0, 100).sliderRange(0, 100).onChanged(value -> recolorAll()).build());
+    private final Setting<RenderMode> renderMode = sgGeneral.add(new EnumSetting.Builder<RenderMode>()
+        .name("render-mode").description("Smooth color tiles or one color and surface per chunk.")
+        .defaultValue(RenderMode.SMOOTH_LAYER).build());
 
     private final Map<Long, ChunkActivityData> chunks = new LinkedHashMap<>();
     private final PriorityQueue<QueuedChunk> scanQueue = new PriorityQueue<>((a, b) -> Double.compare(a.distanceSquared, b.distanceSquared));
@@ -136,25 +148,22 @@ public final class BaseActivityDetector extends Module {
     }
 
     private void recolorAround(ChunkPos center) {
-        int radius = (activityRadius.get() + 15) / 16;
-        for (int x = center.x - radius; x <= center.x + radius; x++) for (int z = center.z - radius; z <= center.z + radius; z++) {
-            ChunkActivityData data = chunks.get(ChunkPos.toLong(x, z));
-            if (data != null) updateColors(data);
-        }
+        double reach = activityRadius.get() + 24.0;
+        double reachSquared = reach * reach;
+        for (ChunkActivityData data : chunks.values()) if (ActivityHeatmap.horizontalDistanceSquared(
+            center.getCenterX(), center.getCenterZ(), data.chunkPos().getCenterX(), data.chunkPos().getCenterZ()) <= reachSquared) updateColors(data);
     }
 
     private void recolorAll() { for (ChunkActivityData data : chunks.values()) updateColors(data); }
 
     private void updateColors(ChunkActivityData data) {
         int radius = activityRadius.get();
-        int chunkRadius = (radius + 15) / 16;
         double farSquared = (double) radius * radius;
         nearbyPoints.clear();
-        for (int x = data.chunkPos().x - chunkRadius; x <= data.chunkPos().x + chunkRadius; x++)
-            for (int z = data.chunkPos().z - chunkRadius; z <= data.chunkPos().z + chunkRadius; z++) {
-                ChunkActivityData nearby = chunks.get(ChunkPos.toLong(x, z));
-                if (nearby != null) nearbyPoints.addAll(nearby.activityPoints());
-            }
+        double reach = radius + 24.0, reachSquared = reach * reach;
+        for (ChunkActivityData nearby : chunks.values()) if (ActivityHeatmap.horizontalDistanceSquared(
+            data.chunkPos().getCenterX(), data.chunkPos().getCenterZ(), nearby.chunkPos().getCenterX(), nearby.chunkPos().getCenterZ()) <= reachSquared)
+            nearbyPoints.addAll(nearby.activityPoints());
         for (int gz = 0; gz < data.gridSize(); gz++) for (int gx = 0; gx < data.gridSize(); gx++) {
             int index = data.index(gx, gz);
             double worldX = data.chunkPos().getStartX() + gx * data.resolution();
@@ -162,7 +171,8 @@ public final class BaseActivityDetector extends Module {
             double nearest = farSquared;
             for (ActivityPoint point : nearbyPoints) nearest = Math.min(nearest,
                 ActivityHeatmap.horizontalDistanceSquared(worldX, worldZ, point.position().getX() + 0.5, point.position().getZ() + 0.5));
-            data.color(index, ActivityHeatmap.color(ActivityHeatmap.normalize(nearest, Math.min(8, radius - 1), radius), overlayAlpha.get()));
+            data.color(index, ActivityHeatmap.color(ActivityHeatmap.normalize(nearest, Math.min(8, radius - 1), radius),
+                activityColor.get(), untouchedColor.get(), overlayOpacity.get()));
         }
     }
 
@@ -171,6 +181,10 @@ public final class BaseActivityDetector extends Module {
         if (mc.player == null || mc.world == null) return;
         for (ChunkActivityData data : chunks.values()) {
             if (!withinRenderDistance(data.chunkPos()) || !mc.world.getChunkManager().isChunkLoaded(data.chunkPos().x, data.chunkPos().z) || data.color(0) == null) continue;
+            if (renderMode.get() == RenderMode.CHUNK_BASED) {
+                renderChunk(event, data);
+                continue;
+            }
             for (int gz = 0; gz < data.gridSize() - 1; gz++) for (int gx = 0; gx < data.gridSize() - 1; gx++) {
                 int i00 = data.index(gx, gz), i01 = data.index(gx, gz + 1), i11 = data.index(gx + 1, gz + 1), i10 = data.index(gx + 1, gz);
                 double x0 = data.chunkPos().getStartX() + gx * data.resolution(), z0 = data.chunkPos().getStartZ() + gz * data.resolution();
@@ -180,6 +194,16 @@ public final class BaseActivityDetector extends Module {
                     data.color(i00), data.color(i01), data.color(i11), data.color(i10));
             }
         }
+    }
+
+    private void renderChunk(Render3DEvent event, ChunkActivityData data) {
+        int last = data.gridSize() - 1;
+        int i00 = data.index(0, 0), i01 = data.index(0, last), i11 = data.index(last, last), i10 = data.index(last, 0);
+        var color = data.color(data.index(last / 2, last / 2));
+        double x0 = data.chunkPos().getStartX(), z0 = data.chunkPos().getStartZ();
+        double x1 = x0 + 16, z1 = z0 + 16;
+        event.renderer.quad(x0, data.surfaceY(i00) + 0.03, z0, x0, data.surfaceY(i01) + 0.03, z1,
+            x1, data.surfaceY(i11) + 0.03, z1, x1, data.surfaceY(i10) + 0.03, z0, color, color, color, color);
     }
 
     private void enqueue(int chunkX, int chunkZ, boolean force) {
@@ -236,6 +260,32 @@ public final class BaseActivityDetector extends Module {
         smoothEdge(data, chunks.get(ChunkPos.toLong(data.chunkPos().x + 1, data.chunkPos().z)), true, true);
         smoothEdge(data, chunks.get(ChunkPos.toLong(data.chunkPos().x, data.chunkPos().z - 1)), false, false);
         smoothEdge(data, chunks.get(ChunkPos.toLong(data.chunkPos().x, data.chunkPos().z + 1)), false, true);
+        smoothCorner(data.chunkPos().x, data.chunkPos().z);
+        smoothCorner(data.chunkPos().x + 1, data.chunkPos().z);
+        smoothCorner(data.chunkPos().x, data.chunkPos().z + 1);
+        smoothCorner(data.chunkPos().x + 1, data.chunkPos().z + 1);
+    }
+
+    private void smoothCorner(int boundaryX, int boundaryZ) {
+        ChunkActivityData[] touching = {
+            chunks.get(ChunkPos.toLong(boundaryX - 1, boundaryZ - 1)), chunks.get(ChunkPos.toLong(boundaryX, boundaryZ - 1)),
+            chunks.get(ChunkPos.toLong(boundaryX - 1, boundaryZ)), chunks.get(ChunkPos.toLong(boundaryX, boundaryZ))
+        };
+        int sum = 0, count = 0;
+        for (ChunkActivityData chunk : touching) if (chunk != null) {
+            int last = chunk.gridSize() - 1;
+            int gx = chunk.chunkPos().x < boundaryX ? last : 0;
+            int gz = chunk.chunkPos().z < boundaryZ ? last : 0;
+            sum += chunk.surfaceY(chunk.index(gx, gz)); count++;
+        }
+        if (count < 2) return;
+        int average = Math.round((float) sum / count);
+        for (ChunkActivityData chunk : touching) if (chunk != null) {
+            int last = chunk.gridSize() - 1;
+            int gx = chunk.chunkPos().x < boundaryX ? last : 0;
+            int gz = chunk.chunkPos().z < boundaryZ ? last : 0;
+            chunk.surfaceY(chunk.index(gx, gz), average);
+        }
     }
 
     private void smoothEdge(ChunkActivityData data, ChunkActivityData neighbor, boolean xEdge, boolean positive) {
@@ -276,4 +326,11 @@ public final class BaseActivityDetector extends Module {
     }
 
     private record QueuedChunk(ChunkPos pos, double distanceSquared) {}
+
+    public enum RenderMode {
+        SMOOTH_LAYER("Smooth Layer"), CHUNK_BASED("Chunk Based");
+        private final String title;
+        RenderMode(String title) { this.title = title; }
+        @Override public String toString() { return title; }
+    }
 }

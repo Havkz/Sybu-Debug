@@ -43,8 +43,7 @@ public final class ActivityScanner {
             }
             ground[z * 16 + x] = found;
         }
-        filterHighOutliers(ground, 12);
-        smoothSurface(ground, 16, 5);
+        correctGroundToAverage(ground, sections, chunk, bottomY, topY, 10);
         for (int z = 0; z < 16; z++) for (int x = 0; x < 16; x++) {
             int found = ground[z * 16 + x];
             for (int y = Math.max(bottomY, found - HOLE_SEARCH_DEPTH - HOLE_DEPTH); y <= Math.min(topY - 1, found + 2); y++)
@@ -73,7 +72,6 @@ public final class ActivityScanner {
         int[] surfaceY = new int[gridSize * gridSize];
         for (int gz = 0; gz < gridSize; gz++) for (int gx = 0; gx < gridSize; gx++)
             surfaceY[gz * gridSize + gx] = ground[Math.min(15, gz * resolution) * 16 + Math.min(15, gx * resolution)];
-        smoothSurface(surfaceY, gridSize, 5);
         if (!holes && !obsidian) return new ChunkActivityData(snapshot.pos(), resolution, surfaceY, List.of());
 
         Map<ActivityType, Set<Long>> markerCells = new EnumMap<>(ActivityType.class);
@@ -115,10 +113,34 @@ public final class ActivityScanner {
     }
 
     public static void filterHighOutliers(int[] heights, int maxRise) {
+        int groundLevel = averageLevel(heights);
+        for (int i = 0; i < heights.length; i++) if (heights[i] > groundLevel + maxRise) heights[i] = groundLevel;
+    }
+
+    private static void correctGroundToAverage(int[] heights, ChunkSection[] sections, WorldChunk chunk, int bottomY, int topY, int tolerance) {
+        int average = averageLevel(heights);
+        for (int z = 0; z < 16; z++) for (int x = 0; x < 16; x++) {
+            int index = z * 16 + x;
+            if (heights[index] < average - tolerance) { heights[index] = average; continue; }
+            if (heights[index] <= average + tolerance) continue;
+            int replacement = average;
+            for (int y = Math.min(heights[index] - 2, average + tolerance - 1); y >= bottomY; y--) {
+                if (!solid(get(sections, chunk, bottomY, topY, x, y, z))) continue;
+                int support = 0;
+                for (int d = 0; d < 8; d++) if (solid(get(sections, chunk, bottomY, topY, x, y - d, z))) support++;
+                if (support >= 6) { replacement = y + 1; break; }
+            }
+            heights[index] = replacement;
+        }
+    }
+
+    private static int averageLevel(int[] heights) {
         int[] sorted = heights.clone();
         Arrays.sort(sorted);
-        int groundLevel = sorted[sorted.length / 2];
-        for (int i = 0; i < heights.length; i++) if (heights[i] > groundLevel + maxRise) heights[i] = groundLevel;
+        int trim = sorted.length / 4;
+        long sum = 0;
+        for (int i = trim; i < sorted.length - trim; i++) sum += sorted[i];
+        return (int) Math.round((double) sum / (sorted.length - trim * 2));
     }
 
     private static boolean isHoleTop(Snapshot s, int x, int y, int z) {

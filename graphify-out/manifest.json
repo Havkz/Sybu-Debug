@@ -40,8 +40,8 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1788205334.737841,
-    "ast_hash": "f2ecd4b53fdb5fc4cb9d91aa081dc446",
+    "mtime": 1788206139.256851,
+    "ast_hash": "861e23729d0b223dd1fd7610f09dcec9",
     "semantic_hash": ""
   },
   "src/main/resources/assets/template/icon.png": {
@@ -80,8 +80,8 @@
     "semantic_hash": ""
   },
   "src/test/java/com/havkz/sybudebug/detection/CoreSelfTest.java": {
-    "mtime": 1788205258.5874364,
-    "ast_hash": "2448d50af45313a19edda10cca037fb2",
+    "mtime": 1788206082.6256075,
+    "ast_hash": "b02a34b008c3b735bd5abb20d22a90f3",
     "semantic_hash": ""
   },
   "src/main/java/com/havkz/sybudebug/mixin/AzimuthTrackedWaypointAccessor.java": {
@@ -115,8 +115,8 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1788205365.1145494,
-    "ast_hash": "eda7d8bd9eb462a7259b50df498771cf",
+    "mtime": 1788206082.626111,
+    "ast_hash": "a6a644e637a37b4d873507a0f2eed2b6",
     "semantic_hash": ""
   },
   "TESTING.md": {
@@ -130,8 +130,8 @@
     "semantic_hash": ""
   },
   "src/main/java/com/havkz/sybudebug/activity/ActivityHeatmap.java": {
-    "mtime": 1788189947.9689698,
-    "ast_hash": "057cc20c1a980df0161e5c0fcb45f4ee",
+    "mtime": 1788206082.6245503,
+    "ast_hash": "8d82da0638244a37d5360dd03538558a",
     "semantic_hash": ""
   },
   "src/main/java/com/havkz/sybudebug/activity/ActivityPoint.java": {
@@ -140,8 +140,8 @@
     "semantic_hash": ""
   },
   "src/main/java/com/havkz/sybudebug/activity/ActivityScanner.java": {
-    "mtime": 1788205258.585368,
-    "ast_hash": "35613396da2f598d8b515cdc10d982c8",
+    "mtime": 1788206082.6224227,
+    "ast_hash": "02e65017c82c2d736ecc652e99c36588",
     "semantic_hash": ""
   },
   "src/main/java/com/havkz/sybudebug/activity/ChunkActivityData.java": {
@@ -150,8 +150,8 @@
     "semantic_hash": ""
   },
   "src/main/java/com/havkz/sybudebug/modules/BaseActivityDetector.java": {
-    "mtime": 1788205334.737841,
-    "ast_hash": "ebf021551df419a1a5bf7c4718f6ea44",
+    "mtime": 1788206082.623422,
+    "ast_hash": "099f7e9011188155760dd2b4b8a59917",
     "semantic_hash": ""
   }
 }

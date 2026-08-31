@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.5.0
+
+- Replaced the separate overlay-alpha slider with standard Meteor color pickers for activity and untouched terrain.
+- Both endpoint colors include independent transparency and are blended across the configured red radius.
+- Replaced neighbor-based ground filtering with per-column descent toward a robust chunk-wide average.
+- Unified four-chunk corner heights to prevent holes in the coarse carpet mesh.
+- Added Smooth Layer and single-quad Chunk Based rendering modes.
+- Extended red radius input to 2048 meters and added a global 0-100 percent overlay opacity control.
+
 ## 1.4.0
 
 - Ignored tall positive Y outliers before smoothing so buildings and pillars no longer lift the carpet.
