@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.3.0
+
+- Increased scanning to five workers and five player-prioritized chunks per tick.
+- Reduced the normal hole snapshot from the full world height to a narrow surface band; full-height scanning now runs only when optional obsidian activity is enabled.
+- Made obsidian activity disabled by default and reduced the module to three settings.
+- Switched the carpet to Minecraft's render distance and retained it for the complete loaded lifetime of each chunk.
+- Rebuilt coloring as an immediate 64-block red activity aura with green used only outside known activity range.
+- Fixed open shafts using their low heightmap floor by deriving the hole search level from the smoothed neighboring surface.
+
 ## 1.2.0
 
 - Prioritized newly loaded chunks outward from the player's current position.

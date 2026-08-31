@@ -24,6 +24,7 @@ public final class CoreSelfTest {
         testEvidenceDecayAndBounds();
         testActivityMathAndPortalFilter();
         testSurfaceSmoothing();
+        testSurfaceHoleIsActivity();
     }
 
     private static void testA_NormalSurvivalNoAlarm() {
@@ -133,6 +134,21 @@ public final class CoreSelfTest {
             if (x > 0) check(Math.abs(heights[i] - heights[i - 1]) <= 5, "surface x slope must be bounded");
             if (z > 0) check(Math.abs(heights[i] - heights[i - 3]) <= 5, "surface z slope must be bounded");
         }
+    }
+
+    private static void testSurfaceHoleIsActivity() {
+        int height = 128;
+        byte[] blocks = new byte[16 * height * 16];
+        java.util.Arrays.fill(blocks, (byte) 1);
+        int[] ground = new int[256];
+        java.util.Arrays.fill(ground, 65);
+        for (int y = 60; y <= 64; y++) blocks[(y * 16 + 8) * 16 + 8] = 0;
+        byte[] border = new byte[height * 16];
+        java.util.Arrays.fill(border, (byte) 1);
+        ActivityScanner.Snapshot snapshot = new ActivityScanner.Snapshot(null, 0, height, blocks, ground, border, border, border, border);
+        check(ActivityScanner.detectsHole(snapshot, 8, 64, 8), "surface hole must create red activity evidence");
+        for (int y = 60; y <= 64; y++) blocks[(y * 16 + 8) * 16] = 0;
+        check(ActivityScanner.detectsHole(snapshot, 0, 64, 8), "chunk-edge hole must use the neighbor halo");
     }
 
     private static DetectionCandidate explicitSpectator(DetectionEngine engine, UUID uuid) {

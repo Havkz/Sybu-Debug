@@ -39,7 +39,7 @@ Exact positions can show a 3D tracer, box, name, distance, confidence, and live/
 
 ## LümmelFinder activity heatmap
 
-`LümmelFinder` passively analyzes normal client-visible chunk data. It treats enclosed vertical holes and visible obsidian as historical player-activity markers, then renders a transparent surface heatmap: red near activity, yellow/orange at medium distance, and green far from known activity. Green means only **low visible activity**, never a confirmed base.
+`LümmelFinder` passively analyzes normal client-visible chunk data. It treats enclosed vertical holes and, when enabled, visible obsidian as historical player-activity markers, then renders a low-cost 4x4-block surface carpet: red around activity and green outside its range. Its range follows Minecraft's render distance, and cached carpet data remains until Minecraft unloads the chunk. Green means only **low visible activity**, never a confirmed base.
 
 Likely ruined-portal obsidian is ignored when its 5-block X/Y/Z neighborhood contains crying obsidian or a combination of netherrack with magma/lava. The module uses no seed, probing packets, anti-xray bypass, tunnels, or stairs.
 
