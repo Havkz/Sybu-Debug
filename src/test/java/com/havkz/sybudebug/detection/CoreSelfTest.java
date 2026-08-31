@@ -122,6 +122,7 @@ public final class CoreSelfTest {
         check(ActivityHeatmap.horizontalDistanceSquared(0, 0, 1, 1) == 2, "activity distance must use Euclidean X/Z geometry");
         check(ActivityHeatmap.normalize(24 * 24, 24, 160) == 0, "near activity must normalize to red");
         check(ActivityHeatmap.normalize(160 * 160, 24, 160) == 1, "far activity must normalize to green");
+        check(ActivityHeatmap.roundedAverage(129, 2) == 65, "shared chunk layer must move in whole rounded blocks");
         Color mixed = ActivityHeatmap.color(0.5, new Color(200, 0, 20, 40), new Color(0, 100, 220, 160));
         check(mixed.r == 100 && mixed.g == 50 && mixed.b == 120 && mixed.a == 100, "custom endpoint colors and alpha must blend");
         check(ActivityScanner.ruinedPortalEvidence(4, 1, 0, 0), "netherrack plus magma must identify portal evidence");

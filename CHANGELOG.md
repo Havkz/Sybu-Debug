@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.7.0
+
+- Rendered every Chunk Based quad at one shared whole-block Y coordinate derived from the average ground height of all visible loaded chunks.
+- Added efficient chunk boundary lines while avoiding duplicate shared edges.
+- Made recoloring independent of red-radius size by scanning only loaded chunks and collecting activity points once per recolor pass.
+
 ## 1.6.0
 
 - Removed the redundant overlay-opacity slider; transparency comes directly from the two Meteor color pickers.
