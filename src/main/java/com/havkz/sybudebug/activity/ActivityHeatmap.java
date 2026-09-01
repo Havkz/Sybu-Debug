@@ -42,4 +42,8 @@ public final class ActivityHeatmap {
     private static int mix(int from, int to, double amount) { return (int) Math.round(from + (to - from) * amount); }
 
     public static int roundedAverage(long sum, int count) { return count == 0 ? 0 : (int) Math.round((double) sum / count); }
+
+    public static boolean sameColor(Color a, Color b) {
+        return a == b || a != null && b != null && a.r == b.r && a.g == b.g && a.b == b.b && a.a == b.a;
+    }
 }

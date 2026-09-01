@@ -125,6 +125,8 @@ public final class CoreSelfTest {
         check(ActivityHeatmap.roundedAverage(129, 2) == 65, "shared chunk layer must move in whole rounded blocks");
         Color mixed = ActivityHeatmap.color(0.5, new Color(200, 0, 20, 40), new Color(0, 100, 220, 160));
         check(mixed.r == 100 && mixed.g == 50 && mixed.b == 120 && mixed.a == 100, "custom endpoint colors and alpha must blend");
+        check(ActivityHeatmap.sameColor(new Color(1, 2, 3, 4), new Color(1, 2, 3, 4)), "equal chunk colors must merge into one render run");
+        check(!ActivityHeatmap.sameColor(new Color(1, 2, 3, 4), new Color(1, 2, 3, 5)), "different chunk alpha must split render runs");
         check(ActivityScanner.ruinedPortalEvidence(4, 1, 0, 0), "netherrack plus magma must identify portal evidence");
         check(ActivityScanner.ruinedPortalEvidence(0, 0, 0, 1), "crying obsidian must identify portal evidence");
         check(!ActivityScanner.ruinedPortalEvidence(8, 0, 0, 0), "netherrack alone must not hide player obsidian");

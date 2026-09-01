@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.8.0
+
+- Removed Smooth Layer and its per-chunk height/color raster work.
+- Kept only flat binary Chunk Based rendering at one shared Y level.
+- Replaced per-chunk border lines with one shared grid, reducing line count from proportional to chunk count to proportional to view diameter.
+- Merged adjacent same-color chunks into row runs, reducing overlay quads from proportional to chunk count to roughly proportional to view diameter.
+
 ## 1.7.0
 
 - Rendered every Chunk Based quad at one shared whole-block Y coordinate derived from the average ground height of all visible loaded chunks.

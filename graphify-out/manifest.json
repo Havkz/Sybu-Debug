@@ -40,8 +40,8 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1788207538.938663,
-    "ast_hash": "7e65016970135ca3168b75139c50fd02",
+    "mtime": 1788279260.5263577,
+    "ast_hash": "265c976322b50c7540ea643cac636206",
     "semantic_hash": ""
   },
   "src/main/resources/assets/template/icon.png": {
@@ -80,8 +80,8 @@
     "semantic_hash": ""
   },
   "src/test/java/com/havkz/sybudebug/detection/CoreSelfTest.java": {
-    "mtime": 1788207538.9371617,
-    "ast_hash": "51712a1a4a66fc4eb7043749ee552488",
+    "mtime": 1788279344.8757596,
+    "ast_hash": "a429ca2b8760dd6abb81dc254a153cbe",
     "semantic_hash": ""
   },
   "src/main/java/com/havkz/sybudebug/mixin/AzimuthTrackedWaypointAccessor.java": {
@@ -115,8 +115,8 @@
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
-    "mtime": 1788207605.7558255,
-    "ast_hash": "7c56a9318a2fb98539f6e643082dc035",
+    "mtime": 1788279330.3467944,
+    "ast_hash": "70a1b0f47c45c44759cebd2e86dc4a23",
     "semantic_hash": ""
   },
   "TESTING.md": {
@@ -130,8 +130,8 @@
     "semantic_hash": ""
   },
   "src/main/java/com/havkz/sybudebug/activity/ActivityHeatmap.java": {
-    "mtime": 1788207538.936165,
-    "ast_hash": "0665e478ad88bc7202496bd78d0538a4",
+    "mtime": 1788279344.8742592,
+    "ast_hash": "cf870cd020ac2180e7a2cb8e7641989f",
     "semantic_hash": ""
   },
   "src/main/java/com/havkz/sybudebug/activity/ActivityPoint.java": {
@@ -150,8 +150,8 @@
     "semantic_hash": ""
   },
   "src/main/java/com/havkz/sybudebug/modules/BaseActivityDetector.java": {
-    "mtime": 1788207599.6594372,
-    "ast_hash": "2178256be94ce53d79b607ad51183640",
+    "mtime": 1788279344.8742592,
+    "ast_hash": "a24a7298ab3700204d988e3698039219",
     "semantic_hash": ""
   }
 }
