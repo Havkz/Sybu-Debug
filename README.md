@@ -1,6 +1,6 @@
 # Sybu Debug by V0trex
 
-Meteor Client addon by **V0trex** for Minecraft Java Edition **1.21.11**. It adds the exact Meteor category **Sybu Debug** containing **SpectatorDetector** and **LümmelFinder**.
+Meteor Client addon by **V0trex** for Minecraft Java Edition **1.21.11**. It adds the exact Meteor category **Sybu Debug** containing **SpectatorDetector** and **BaseGrid**.
 
 ## Installation
 
@@ -37,9 +37,9 @@ Exact positions can show a 3D tracer, box, name, distance, confidence, and live/
 
 `Logoff On Detect` cleanly disconnects with `SpectatorDetector: spectator detected`; it never closes Minecraft. Warning, panic, and disconnect run in that order and panic/logoff trigger at most once per candidate.
 
-## LümmelFinder activity heatmap
+## BaseGrid probability raster
 
-`LümmelFinder` passively analyzes normal client-visible chunk data. It treats enclosed vertical holes and, when enabled, visible obsidian as historical player-activity markers. Its flat Chunk Based overlay draws every loaded chunk at one shared whole-block Y coordinate derived from their average ground height, with a single low-cost grid showing chunk boundaries. A chunk uses the activity color only when more than 50 percent of its 16x16 area lies inside the configured red radius. Activity and untouched colors, including transparency, use standard Meteor color pickers. Its range follows Minecraft's render distance, and cached overlay data remains until Minecraft unloads the chunk. The untouched color means only **low visible activity**, never a confirmed base.
+`BaseGrid` passively analyzes normal client-visible chunk data as a probability raster for possible bases in areas without visible player activity. It treats enclosed vertical holes and, when enabled, visible obsidian as historical player-activity markers. Its flat overlay draws every loaded chunk at one shared whole-block Y coordinate derived from their average ground height, with a single low-cost grid showing chunk boundaries. A chunk uses the activity color only when more than 50 percent of its 16x16 area lies inside the configured red radius. Activity, untouched, and grid-line colors—including transparency—use standard Meteor color pickers. Its range follows Minecraft's render distance, and cached overlay data remains until Minecraft unloads the chunk. The untouched color means only **low visible activity**, never a confirmed base.
 
 Likely ruined-portal obsidian is ignored when its 5-block X/Y/Z neighborhood contains crying obsidian or a combination of netherrack with magma/lava. The module uses no seed, probing packets, anti-xray bypass, tunnels, or stairs.
 

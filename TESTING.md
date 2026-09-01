@@ -16,6 +16,6 @@
 
 The runtime smoke test uses `gradlew.bat runClient`. It has verified Fabric Loader 0.18.2, Meteor Client 1.21.11, Sybu Debug initialization, and all three locator mixin targets. It does not claim a real multiplayer spectator, panic, or disconnect was exercised without a suitable test server.
 
-## LümmelFinder checks
+## BaseGrid checks
 
 The core self-test also verifies diagonal Euclidean X/Z distance (`1,1 = sqrt(2)`), near/far normalization, and ruined-portal evidence rules. The clean build compiles the real Minecraft 1.21.11 chunk, heightmap, block-state, event, and quad-rendering APIs. Runtime startup verifies module registration; representative live terrain remains the final visual/performance check because repository tests do not ship a fixed Minecraft world fixture.

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.9.0
+
+- Renamed the visible module from LümmelFinder to BaseGrid to describe its inactivity-based probability raster.
+- Added a standard Meteor grid-line color setting with independent transparency.
+- Spread radius and activity recoloring across four chunks per tick to prevent loaded-world-wide FPS spikes.
+
 ## 1.8.0
 
 - Removed Smooth Layer and its per-chunk height/color raster work.
